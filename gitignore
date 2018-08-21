@@ -1,4 +1,5 @@
-/.gradle/*
-/.idea/*
-/gradle/*
-/out/*
+/.gradle/
+/.idea/
+/gradle/
+/out/
+*.class
