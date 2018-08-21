@@ -1,0 +1,21 @@
+syntax='proto3';
+message CPrivateChat{
+    string userId=1;
+    string destId=2;
+    bytes content=3;
+    ChatType chatType=4;
+    DataType dataType=5;
+
+
+    enum DataType{
+        TXT = 0;
+        VOICE = 1;
+        VIDEO = 2;
+        IMG = 3;
+        HYBRID = 4;
+    }
+    enum ChatType{
+        ONE2ONE=0;
+        ONE2MANY=1;
+    }
+}
