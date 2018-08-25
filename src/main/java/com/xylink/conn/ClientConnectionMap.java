@@ -2,11 +2,14 @@ package com.xylink.conn;
 
 import com.xylink.protobuf.Chat;
 import com.xylink.protobuf.Protocol;
+import com.xylink.utils.EncryptUtils;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import java.util.Base64;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -51,16 +54,17 @@ public class ClientConnectionMap {
         return c;
     }
 
-    public static void buildSession(ClientConnection c, Protocol.CLogin msg) {
-        c.setUserId(msg.getUserId());
-        if(userId2NetIdMap.contains(msg.getUserId())) {
-            long existNetId = userId2NetIdMap.get(msg.getUserId());
+    public static void buildSession(ClientConnection c, String userId) {
+        c.setUserId(userId);
+        if(userId2NetIdMap.contains(userId)) {
+            long existNetId = userId2NetIdMap.get(userId);
             ClientConnection existConn = allClientConnectionMap.get(existNetId);
             if(existConn != null) {
                 allClientConnectionMap.remove(existNetId);//踢掉上一个在线的
                 existConn.close();
             }
         }
-        userId2NetIdMap.put(msg.getUserId(), c.getNetId());
+        userId2NetIdMap.put(userId, c.getNetId());
+        c.setCertificate(EncryptUtils.base64Encode(UUID.randomUUID().toString()));
     }
 }

@@ -3,16 +3,27 @@ package com.xylink.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.xylink.auth.AuthFilter;
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+
+import javax.sql.DataSource;
+import javax.xml.crypto.Data;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by konglk on 2018/8/15.
@@ -74,6 +85,29 @@ public class BeanConfig {
         jedisPoolConfig.setTimeBetweenEvictionRunsMillis(timeout);
         JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout);
         return jedisPool;
+    }
+
+    @Bean
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
+        SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
+        sessionFactoryBean.setDataSource(dataSource);
+        org.apache.ibatis.session.Configuration config = new org.apache.ibatis.session.Configuration();
+        config.setMapUnderscoreToCamelCase(true);
+        sessionFactoryBean.setConfiguration(config);
+        // 设置查找器
+        PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        sessionFactoryBean.setMapperLocations(resolver.getResources("classpath:/mapper/*.xml"));
+        return sessionFactoryBean.getObject();
+    }
+
+    @Bean
+    public FilterRegistrationBean authFilter() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(new AuthFilter());//添加过滤器
+        registration.addUrlPatterns("/*");//设置过滤路径，/*所有路径
+        registration.setName("AuthFilter");//设置优先级
+        registration.setOrder(1);//设置优先级
+        return registration;
     }
 
 }

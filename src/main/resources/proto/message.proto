@@ -70,4 +70,6 @@ code:
 message SResponse {
     int32 code = 1; //状态码
     string desc = 2;
+    string certificate = 3;
+    string userId = 4;
 }

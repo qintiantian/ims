@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xylink.mappers.ConversationDao">
+    <insert id="insertConversation" parameterType="com.xylink.entity.ConversationVO">
+      insert into ims_conversation(conversation_id,user_id,dest_id,conversation_type,status,ts)
+      values(#{conversationId},#{userId},#{destId},#{conversationType},#{status},#{ts})
+    </insert>
+
+    <select id="selectConversationByUserId" resultType="java.util.HashMap">
+        select u.img_url as imgUrl, u.nickname, u.username, c.conversation_id as conversationId, c.ts as lastDate from ims_conversation c left join ims_user u on c.dest_id = u.user_id
+        where c.user_id=#{userId} and c.status=1 and u.status=1
+    </select>
+
+</mapper>

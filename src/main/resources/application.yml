@@ -18,4 +18,10 @@ spring:
           max-wait: 6000   # 连接池最大阻塞等待时间（使用负值表示没有限制）
           min-idle: 10    # 连接池中的最小空闲连接
     profiles:
-      active: dev
+        active: dev
+    datasource:
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost/ims
+        username: root
+        password: root
+

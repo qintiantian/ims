@@ -5240,6 +5240,26 @@ public final class Protocol {
      */
     com.google.protobuf.ByteString
         getDescBytes();
+
+    /**
+     * <code>string certificate = 3;</code>
+     */
+    java.lang.String getCertificate();
+    /**
+     * <code>string certificate = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getCertificateBytes();
+
+    /**
+     * <code>string userId = 4;</code>
+     */
+    java.lang.String getUserId();
+    /**
+     * <code>string userId = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getUserIdBytes();
   }
   /**
    * <pre>
@@ -5263,6 +5283,8 @@ public final class Protocol {
     private SResponse() {
       code_ = 0;
       desc_ = "";
+      certificate_ = "";
+      userId_ = "";
     }
 
     @java.lang.Override
@@ -5305,6 +5327,18 @@ public final class Protocol {
               java.lang.String s = input.readStringRequireUtf8();
 
               desc_ = s;
+              break;
+            }
+            case 26: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              certificate_ = s;
+              break;
+            }
+            case 34: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              userId_ = s;
               break;
             }
           }
@@ -5378,6 +5412,74 @@ public final class Protocol {
       }
     }
 
+    public static final int CERTIFICATE_FIELD_NUMBER = 3;
+    private volatile java.lang.Object certificate_;
+    /**
+     * <code>string certificate = 3;</code>
+     */
+    public java.lang.String getCertificate() {
+      java.lang.Object ref = certificate_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        certificate_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string certificate = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCertificateBytes() {
+      java.lang.Object ref = certificate_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        certificate_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int USERID_FIELD_NUMBER = 4;
+    private volatile java.lang.Object userId_;
+    /**
+     * <code>string userId = 4;</code>
+     */
+    public java.lang.String getUserId() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        userId_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string userId = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUserIdBytes() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        userId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -5396,6 +5498,12 @@ public final class Protocol {
       if (!getDescBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, desc_);
       }
+      if (!getCertificateBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, certificate_);
+      }
+      if (!getUserIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, userId_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -5410,6 +5518,12 @@ public final class Protocol {
       }
       if (!getDescBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, desc_);
+      }
+      if (!getCertificateBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, certificate_);
+      }
+      if (!getUserIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, userId_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -5431,6 +5545,10 @@ public final class Protocol {
           == other.getCode());
       result = result && getDesc()
           .equals(other.getDesc());
+      result = result && getCertificate()
+          .equals(other.getCertificate());
+      result = result && getUserId()
+          .equals(other.getUserId());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -5446,6 +5564,10 @@ public final class Protocol {
       hash = (53 * hash) + getCode();
       hash = (37 * hash) + DESC_FIELD_NUMBER;
       hash = (53 * hash) + getDesc().hashCode();
+      hash = (37 * hash) + CERTIFICATE_FIELD_NUMBER;
+      hash = (53 * hash) + getCertificate().hashCode();
+      hash = (37 * hash) + USERID_FIELD_NUMBER;
+      hash = (53 * hash) + getUserId().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -5586,6 +5708,10 @@ public final class Protocol {
 
         desc_ = "";
 
+        certificate_ = "";
+
+        userId_ = "";
+
         return this;
       }
 
@@ -5610,6 +5736,8 @@ public final class Protocol {
         Protocol.SResponse result = new Protocol.SResponse(this);
         result.code_ = code_;
         result.desc_ = desc_;
+        result.certificate_ = certificate_;
+        result.userId_ = userId_;
         onBuilt();
         return result;
       }
@@ -5656,6 +5784,14 @@ public final class Protocol {
         }
         if (!other.getDesc().isEmpty()) {
           desc_ = other.desc_;
+          onChanged();
+        }
+        if (!other.getCertificate().isEmpty()) {
+          certificate_ = other.certificate_;
+          onChanged();
+        }
+        if (!other.getUserId().isEmpty()) {
+          userId_ = other.userId_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -5791,6 +5927,144 @@ public final class Protocol {
         onChanged();
         return this;
       }
+
+      private java.lang.Object certificate_ = "";
+      /**
+       * <code>string certificate = 3;</code>
+       */
+      public java.lang.String getCertificate() {
+        java.lang.Object ref = certificate_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          certificate_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string certificate = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCertificateBytes() {
+        java.lang.Object ref = certificate_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          certificate_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string certificate = 3;</code>
+       */
+      public Builder setCertificate(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        certificate_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string certificate = 3;</code>
+       */
+      public Builder clearCertificate() {
+        
+        certificate_ = getDefaultInstance().getCertificate();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string certificate = 3;</code>
+       */
+      public Builder setCertificateBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        certificate_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object userId_ = "";
+      /**
+       * <code>string userId = 4;</code>
+       */
+      public java.lang.String getUserId() {
+        java.lang.Object ref = userId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          userId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string userId = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUserIdBytes() {
+        java.lang.Object ref = userId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          userId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string userId = 4;</code>
+       */
+      public Builder setUserId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        userId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string userId = 4;</code>
+       */
+      public Builder clearUserId() {
+        
+        userId_ = getDefaultInstance().getUserId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string userId = 4;</code>
+       */
+      public Builder setUserIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        userId_ = value;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFieldsProto3(unknownFields);
@@ -5901,8 +6175,9 @@ public final class Protocol {
       "2\022.CLogin.DeviceType\022\n\n\002ts\030\005 \001(\003\022\017\n\007vers" +
       "ion\030\006 \001(\005\022\016\n\006seqNum\030\007 \001(\005\"8\n\nDeviceType\022" +
       "\013\n\007ANDROID\020\000\022\007\n\003IOS\020\001\022\013\n\007WINDOWS\020\002\022\007\n\003MA" +
-      "C\020\003\"\'\n\tSResponse\022\014\n\004code\030\001 \001(\005\022\014\n\004desc\030\002" +
-      " \001(\tB\nB\010Protocolb\006proto3"
+      "C\020\003\"L\n\tSResponse\022\014\n\004code\030\001 \001(\005\022\014\n\004desc\030\002" +
+      " \001(\t\022\023\n\013certificate\030\003 \001(\t\022\016\n\006userId\030\004 \001(" +
+      "\tB\nB\010Protocolb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -5951,7 +6226,7 @@ public final class Protocol {
     internal_static_SResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_SResponse_descriptor,
-        new java.lang.String[] { "Code", "Desc", });
+        new java.lang.String[] { "Code", "Desc", "Certificate", "UserId", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

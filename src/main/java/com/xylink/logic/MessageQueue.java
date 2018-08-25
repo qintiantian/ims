@@ -3,11 +3,17 @@ package com.xylink.logic;
 import com.xylink.auth.AuthService;
 import com.xylink.cache.RedisManager;
 import com.xylink.constants.ImsConstants;
+import com.xylink.entity.MsgVO;
+import com.xylink.entity.UserVO;
+import com.xylink.enums.MsgConfig;
 import com.xylink.protobuf.Protocol;
+import com.xylink.service.MsgService;
+import com.xylink.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by konglk on 2018/8/11.
@@ -17,11 +23,20 @@ public class MessageQueue {
     @Autowired
     private AuthService authService;
     @Autowired
+    private MsgService msgService;
+    @Autowired
     private RedisManager redisManager;
 
     public void push( Protocol.CPrivateChat msg) {
         if(authService.isValidMsg(msg)){
             redisManager.lpush(ImsConstants.IMS_MESSAGES, msg);
+            MsgVO msgVO = new MsgVO();
+            msgVO.setContent(msg.getContent().toString());
+            msgVO.setSendId(msg.getUserId());
+            msgVO.setDestId(msg.getDestId());
+            msgVO.setMsgId(UUID.randomUUID().toString());
+            msgVO.setMsgType(msg.getDataType().getNumber());
+            msgService.insertMsg(msgVO);
         }
     }
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xylink.mappers.UserDao">
+    <insert id="insertUser" parameterType="com.xylink.entity.UserVO">
+      insert into ims_user(user_id,username,nickname,pwd,sugar,img_url,cellphone,sex,country,city,createtime,status,updatetime)
+      values(#{userId},#{username},#{nickname},#{pwd},#{sugar},#{imgUrl},#{cellphone},#{sex},#{country},#{city},#{createtime},#{status},#{updatetime})
+    </insert>
+
+    <select id="selectUserById" resultType="java.util.Map">
+        select user_id as userId, img_url as imgUrl, city as city, nickname as nickname, username as username, sex as sex
+        from ims_user where user_id=#{userId} and status = 1
+    </select>
+
+</mapper>

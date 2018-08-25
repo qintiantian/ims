@@ -3,6 +3,7 @@ package com.xylink.logic;
 import com.xylink.auth.AuthService;
 import com.xylink.conn.ClientConnection;
 import com.xylink.conn.ClientConnectionMap;
+import com.xylink.constants.ImsConstants;
 import com.xylink.protobuf.Protocol;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
@@ -18,33 +19,26 @@ import org.springframework.util.StringUtils;
 public class MessageDispatcher {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
-    @Autowired
-    private AuthService authService;
+
     @Autowired
     private MessageQueue messageQueue;
     @Autowired
-    private MessageProcessor messageProcessor;
+    private LoginHandler loginHandler;
+
 
     public void dispatch(ChannelHandlerContext ctx, Protocol.ProtocolMessage msg) {
         Protocol.ProtocolMessage.RequestType reqType = msg.getRequest().getReqType();
         ClientConnection c = ClientConnectionMap.getClientConnection(ctx.channel().attr(ClientConnection.netIdKey).get());
-        if(c == null)
+        if (c == null)
             return;
         switch (reqType) {
             case LOGIN:
-                Protocol.CLogin m = msg.getRequest().getLogin();
-                if(authService.login(m)) {
-                    logger.info("user ["+m.getUserId()+"] login sucess");
-                    ClientConnectionMap.buildSession(c, m);
-                    messageProcessor.handleNotReadMessage(m.getUserId());
-                }else{
-                    logger.warn("user ["+m.getUserId()+"] invalid user or password");
-                }
+                loginHandler.process(ctx, msg);
                 break;
             case CHAT:
-                if(StringUtils.isEmpty(c.getUserId()))
+                if (StringUtils.isEmpty(c.getUserId()))
                     logger.warn("not login");
-                else{
+                else {
                     messageQueue.push(msg.getRequest().getChat());
                 }
                 break;
