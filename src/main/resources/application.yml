@@ -25,3 +25,5 @@ spring:
         username: root
         password: root
 
+server:
+  context-path: /ims/

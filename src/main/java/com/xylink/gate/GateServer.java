@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
@@ -26,7 +27,6 @@ import java.util.concurrent.TimeUnit;
  * Created by konglk on 2018/8/11.
  */
 @Component
-@Profile("server")
 public class GateServer implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -64,6 +64,12 @@ public class GateServer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        startGateServer();
+        new Thread(()->{
+            try {
+                startGateServer();
+            } catch (InterruptedException e) {
+                logger.error(e.getMessage(), e);
+            }
+        }).start();
     }
 }

@@ -104,7 +104,7 @@ public class BeanConfig {
     public FilterRegistrationBean authFilter() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new AuthFilter());//添加过滤器
-        registration.addUrlPatterns("/*");//设置过滤路径，/*所有路径
+        registration.addUrlPatterns("/user/*");//设置过滤路径，/*所有路径
         registration.setName("AuthFilter");//设置优先级
         registration.setOrder(1);//设置优先级
         return registration;
