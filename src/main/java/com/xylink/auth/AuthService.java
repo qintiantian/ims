@@ -2,6 +2,7 @@ package com.xylink.auth;
 
 import com.xylink.conn.ClientConnection;
 import com.xylink.conn.ClientConnectionMap;
+import com.xylink.constants.ImsConstants;
 import com.xylink.entity.UserVO;
 import com.xylink.protobuf.Protocol;
 import com.xylink.service.UserService;
@@ -24,14 +25,16 @@ public class AuthService {
     @Autowired
     private UserService userService;
 
-    public boolean login(Protocol.CLogin msg) {
+    public UserVO login(Protocol.CLogin msg) {
         if(msg == null || StringUtils.isEmpty(msg.getUserId()) || StringUtils.isEmpty(msg.getPwd()))
-            return false;
+            return null;
         UserVO userVO = userService.selectUser(msg.getUserId());
         if(userVO == null)
-            return false;
+            return null;
         String encrptedpwd = EncryptUtils.crypt(userVO.getSugar()+msg.getPwd());
-        return userVO.getPwd().equals(encrptedpwd);
+        if(userVO.getPwd().equals(encrptedpwd))
+            return userVO;
+        return null;
     }
 
     public boolean isValidMsg(Protocol.CPrivateChat msg) {
@@ -41,9 +44,13 @@ public class AuthService {
     }
 
     public boolean isValidUser(String userId, String certificate) {
-        Map<String,Object> userVO = userService.selecUserById(userId);
+        Map<String,Object> userVO = (Map<String, Object>) redisTemplate.opsForHash().get(ImsConstants.IMS_USERS, userId);
         if(userVO == null) {
-            return false;
+            userVO = userService.selecUserById(userId);
+            if(userVO == null) {
+                return false;
+            }
+            redisTemplate.opsForHash().put(ImsConstants.IMS_USERS, userId, userVO);
         }
         ClientConnection c = ClientConnectionMap.getClientConnection(userId);
         if(c == null || StringUtils.isEmpty(c.getCertificate()))

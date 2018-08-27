@@ -1,5 +1,6 @@
 package com.xylink.logic;
 
+import com.google.protobuf.ByteString;
 import com.xylink.auth.AuthService;
 import com.xylink.cache.RedisManager;
 import com.xylink.constants.ImsConstants;
@@ -12,6 +13,7 @@ import com.xylink.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,7 +33,11 @@ public class MessageQueue {
         if(authService.isValidMsg(msg)){
             redisManager.lpush(ImsConstants.IMS_MESSAGES, msg);
             MsgVO msgVO = new MsgVO();
-            msgVO.setContent(msg.getContent().toString());
+            try {
+                msgVO.setContent(new String(msg.getContent().toByteArray(), "utf8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
             msgVO.setSendId(msg.getUserId());
             msgVO.setDestId(msg.getDestId());
             msgVO.setMsgId(UUID.randomUUID().toString());

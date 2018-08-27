@@ -6,6 +6,8 @@ import com.xylink.mappers.MsgDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -21,5 +23,9 @@ public class MsgService {
         msgVO.setMsgId(UUID.randomUUID().toString());
         msgVO.setHasRead(MsgConfig.NOT_READ);
         msgDao.insertMsg(msgVO);
+    }
+
+    public List<Map<String,Object>> selectHistoryMessageById(String sendId, String destId){
+        return msgDao.selectHistoryMessageById(sendId, destId);
     }
 }

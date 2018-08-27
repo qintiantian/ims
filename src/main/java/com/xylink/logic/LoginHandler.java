@@ -33,7 +33,7 @@ public class LoginHandler implements IMessageHandler {
         Protocol.ProtocolMessage.TResponse.Builder responseBuilder = Protocol.ProtocolMessage.TResponse.newBuilder();
         responseBuilder.setRespType(Protocol.ProtocolMessage.RequestType.LOGIN);
         Protocol.SResponse.Builder sResponseBuilder = Protocol.SResponse.newBuilder();
-        UserVO userVO = userService.selectUser(m.getUserId());
+        UserVO userVO = authService.login(m);
         if (userVO != null) {
             logger.info("user [" + m.getUserId() + "] login sucess");
             ClientConnectionMap.buildSession(c, userVO.getUserId());

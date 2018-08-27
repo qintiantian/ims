@@ -4,6 +4,7 @@ import com.xylink.conn.ClientConnection;
 import com.xylink.conn.ClientConnectionMap;
 import com.xylink.entity.UserVO;
 import com.xylink.service.ConversationService;
+import com.xylink.service.MsgService;
 import com.xylink.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,8 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private MsgService msgService;
     @Autowired
     private ConversationService conversationService;
 
@@ -42,6 +45,11 @@ public class UserController {
     @GetMapping("/conversation/{userId}")
     public Object conversationList(@PathVariable String userId){
         return conversationService.getConversationByUserId(userId);
+    }
+
+    @GetMapping("/historymessage/{userId}/{destId}")
+    public Object historyMessage(@PathVariable String userId, @PathVariable String destId){
+        return msgService.selectHistoryMessageById(userId, destId);
     }
 
     @GetMapping("/test")
