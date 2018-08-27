@@ -7,6 +7,7 @@ import com.xylink.service.ConversationService;
 import com.xylink.service.MsgService;
 import com.xylink.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -47,9 +48,10 @@ public class UserController {
         return conversationService.getConversationByUserId(userId);
     }
 
-    @GetMapping("/historymessage/{userId}/{destId}")
-    public Object historyMessage(@PathVariable String userId, @PathVariable String destId){
-        return msgService.selectHistoryMessageById(userId, destId);
+    @GetMapping("/historymessage/{userId}/{destId}/{pageIndex}/{pageSize}")
+    public Object historyMessage(@PathVariable String userId, @PathVariable String destId, @PathVariable int pageIndex, @PathVariable int pageSize){
+        PageRequest pageRequest = new PageRequest(pageIndex, pageSize);
+        return msgService.selectHistoryMessageById(userId, destId, pageRequest);
     }
 
     @GetMapping("/test")

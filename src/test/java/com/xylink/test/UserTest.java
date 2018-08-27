@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -111,6 +112,7 @@ public class UserTest {
 
     @Test
     public void selHistoryMsg() {
-        System.out.println(msgService.selectHistoryMessageById("eb7687c6-da11-4d23-bc71-36c4a12b2247", "78ad305d-226e-4155-93e2-357ce376a194"));
+        PageRequest pageRequest = new PageRequest(0, 10);
+        System.out.println(msgService.selectHistoryMessageById("eb7687c6-da11-4d23-bc71-36c4a12b2247", "78ad305d-226e-4155-93e2-357ce376a194", pageRequest));
     }
 }

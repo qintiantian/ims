@@ -4,6 +4,7 @@ import com.xylink.entity.MsgVO;
 import com.xylink.enums.MsgConfig;
 import com.xylink.mappers.MsgDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,8 @@ public class MsgService {
         msgDao.insertMsg(msgVO);
     }
 
-    public List<Map<String,Object>> selectHistoryMessageById(String sendId, String destId){
-        return msgDao.selectHistoryMessageById(sendId, destId);
+    public List<Map<String,Object>> selectHistoryMessageById(String sendId, String destId, Pageable pageable){
+        int start = pageable.getPageNumber()*pageable.getPageSize();
+        return msgDao.selectHistoryMessageById(sendId, destId, pageable.getPageNumber(), pageable.getPageSize());
     }
 }
