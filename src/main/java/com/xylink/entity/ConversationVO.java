@@ -10,6 +10,7 @@ public class ConversationVO extends BaseEntity {
     private Integer conversationType;
     private Integer status;
     private Long ts;
+    private Long lastDate;
 
     public String getConversationId() {
         return conversationId;
@@ -57,6 +58,14 @@ public class ConversationVO extends BaseEntity {
 
     public void setTs(Long ts) {
         this.ts = ts;
+    }
+
+    public Long getLastDate() {
+        return lastDate;
+    }
+
+    public void setLastDate(Long lastDate) {
+        this.lastDate = lastDate;
     }
 
     @Override

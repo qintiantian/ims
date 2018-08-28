@@ -32,17 +32,7 @@ public class MessageQueue {
     public void push( Protocol.CPrivateChat msg) {
         if(authService.isValidMsg(msg)){
             redisManager.lpush(ImsConstants.IMS_MESSAGES, msg);
-            MsgVO msgVO = new MsgVO();
-            try {
-                msgVO.setContent(new String(msg.getContent().toByteArray(), "utf8"));
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-            msgVO.setSendId(msg.getUserId());
-            msgVO.setDestId(msg.getDestId());
-            msgVO.setMsgId(UUID.randomUUID().toString());
-            msgVO.setMsgType(msg.getDataType().getNumber());
-            msgService.insertMsg(msgVO);
+            msgService.insertMsg(msgService.buildMsg(msg));
         }
     }
 

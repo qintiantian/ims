@@ -5,10 +5,9 @@ import com.xylink.entity.ConversationVO;
 import com.xylink.entity.MsgVO;
 import com.xylink.entity.UserVO;
 import com.xylink.mappers.ConversationDao;
-import com.xylink.mappers.UserDao;
+import com.xylink.service.ConversationService;
 import com.xylink.service.MsgService;
 import com.xylink.service.UserService;
-import com.xylink.utils.EncryptUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.Base64Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -81,6 +79,8 @@ public class UserTest {
         System.out.println(userVO);
     }
     @Autowired
+    ConversationService conversationService;
+    @Autowired
     ConversationDao conversationDao;
 
     @Test
@@ -96,7 +96,7 @@ public class UserTest {
 
     @Test
     public void selConversion() {
-        System.out.println(conversationDao.selectConversationByUserId("eb7687c6-da11-4d23-bc71-36c4a12b2247"));
+        System.out.println(conversationService.getConversationByUserId("eb7687c6-da11-4d23-bc71-36c4a12b2247"));
     }
 
     @Test
@@ -114,5 +114,10 @@ public class UserTest {
     public void selHistoryMsg() {
         PageRequest pageRequest = new PageRequest(0, 10);
         System.out.println(msgService.selectHistoryMessageById("eb7687c6-da11-4d23-bc71-36c4a12b2247", "78ad305d-226e-4155-93e2-357ce376a194", pageRequest));
+    }
+
+    @Test
+    public void selConversationId() {
+        System.out.println(conversationService.getConversationId("eb7687c6-da11-4d23-bc71-36c4a12b2247", "78ad305d-226e-4155-93e2-357ce376a194"));
     }
 }

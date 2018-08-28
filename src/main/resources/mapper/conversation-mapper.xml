@@ -4,22 +4,31 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xylink.mappers.ConversationDao">
     <insert id="insertConversation" parameterType="com.xylink.entity.ConversationVO">
-      insert into ims_conversation(conversation_id,user_id,dest_id,conversation_type,status,ts)
-      values(#{conversationId},#{userId},#{destId},#{conversationType},#{status},#{ts})
+      insert into ims_conversation(conversation_id,user_id,dest_id,conversation_type,status,ts, last_date)
+      values(#{conversationId},#{userId},#{destId},#{conversationType},#{status},#{ts}, #{lastDate})
     </insert>
 
     <select id="selectConversationByUserId" resultType="java.util.HashMap">
-        select u.img_url as imgUrl, u.nickname, d.destId, u.username, d.ts as lastDate
+        select u.img_url as imgUrl, u.nickname, d.destId, u.username, d.last_date as lastDate, d.content as lastMsg
             from ims_user u join
-            (select c.ts, (CASE
+            (select m.content,c.last_date, (CASE
             WHEN c.user_id = #{userId} THEN
                 c.dest_id
             ELSE
                 c.user_id
             END) as destId
-            from ims_conversation c
-            where c.user_id=#{userId} or c.dest_id=#{userId}) as d
-            on u.user_id = d.destId
+            from ims_conversation c join ims_msg m
+            on c.conversation_id = m.conversation_id
+             where c.user_id=#{userId} or c.dest_id=#{userId}
+            group by m.conversation_id) as d
+        on u.user_id = d.destId
+        where u.status=1
+        order by d.last_date desc
+    </select>
+
+    <select id="selConversationId" resultType="java.lang.String">
+        select conversation_id from ims_conversation c
+        where (c.user_id=#{sendId} and c.dest_id=#{destId}) or (c.dest_id=#{destId} and c.user_id=#{sendId})
     </select>
 
 </mapper>

@@ -11,6 +11,7 @@ public class MsgVO extends BaseEntity {
     private String content;
     private Integer hasRead;
     private Long ts;
+    private String conversationId;
 
     public String getMsgId() {
         return msgId;
@@ -66,6 +67,14 @@ public class MsgVO extends BaseEntity {
 
     public void setTs(Long ts) {
         this.ts = ts;
+    }
+
+    public String getConversationId() {
+        return conversationId;
+    }
+
+    public void setConversationId(String conversationId) {
+        this.conversationId = conversationId;
     }
 
     @Override

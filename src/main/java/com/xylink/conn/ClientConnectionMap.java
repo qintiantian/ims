@@ -1,14 +1,11 @@
 package com.xylink.conn;
 
-import com.xylink.protobuf.Chat;
-import com.xylink.protobuf.Protocol;
 import com.xylink.utils.EncryptUtils;
 import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import java.util.Base64;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
