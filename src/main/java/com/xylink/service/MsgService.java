@@ -39,7 +39,7 @@ public class MsgService {
     public List<Map<String,Object>> selectHistoryMessageById(String sendId, String destId, Pageable pageable){
         int start = pageable.getPageNumber()*pageable.getPageSize();
         List<Map<String,Object>> datas =
-                msgDao.selectHistoryMessageById(sendId, destId, pageable.getPageNumber(), pageable.getPageSize());
+                msgDao.selectHistoryMessageById(sendId, destId, start, pageable.getPageSize());
         if(CollectionUtils.isEmpty(datas))
             return Collections.EMPTY_LIST;
         DataProcess.process(datas, new String[]{"createtime"}, new Function[]{DateFormatter::format});

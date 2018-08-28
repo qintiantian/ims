@@ -21,7 +21,7 @@ public class DateFormatter {
         today.add(Calendar.DAY_OF_MONTH, -1);
         Calendar yesterday = today;
         if(DateUtils.isSameDay(yesterday, target)) {
-            return "昨天";
+//            return "昨天";
         }
         SimpleDateFormat sdf = new SimpleDateFormat("yy/MM/dd");
         return sdf.format(target.getTime());
