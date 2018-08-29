@@ -13,6 +13,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.ObjectInputStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,7 +53,8 @@ public class UserController {
     @GetMapping("/historymessage/{userId}/{destId}/{msgId}/{pageSize}")
     public Object historyMessage(@PathVariable String userId, @PathVariable String destId, @PathVariable String msgId,
                                  @PathVariable int pageSize, @RequestParam("direct") int direct){
-        if(direct == 1 || direct == -1)
+        List<Integer> valid = Arrays.asList(1,2,-1,-2);
+        if(valid.contains(direct))
             return msgService.selectHistoryMessageById(userId, destId, msgId, pageSize, direct);
         return "";
     }
