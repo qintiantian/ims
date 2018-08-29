@@ -28,12 +28,13 @@ public class GateServer implements CommandLineRunner {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value("${im.gate.port}")
-    private int port;
+    public int port;
+    private EventLoopGroup bossGroup = new NioEventLoopGroup();
+    private EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     public void  startGateServer() throws InterruptedException {
         logger.info("start gate server at port " + port);
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
@@ -57,6 +58,11 @@ public class GateServer implements CommandLineRunner {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
+    }
+
+    public void shutdown() {
+        workerGroup.shutdownGracefully();
+        bossGroup.shutdownGracefully();
     }
 
     @Override

@@ -48,10 +48,9 @@ public class UserController {
         return conversationService.getConversationByUserId(userId);
     }
 
-    @GetMapping("/historymessage/{userId}/{destId}/{pageIndex}/{pageSize}")
-    public Object historyMessage(@PathVariable String userId, @PathVariable String destId, @PathVariable int pageIndex, @PathVariable int pageSize){
-        PageRequest pageRequest = new PageRequest(pageIndex, pageSize);
-        return msgService.selectHistoryMessageById(userId, destId, pageRequest);
+    @GetMapping("/historymessage/{userId}/{destId}/{msgId}/{pageSize}")
+    public Object historyMessage(@PathVariable String userId, @PathVariable String destId, @PathVariable String msgId, @PathVariable int pageSize){
+        return msgService.selectHistoryMessageById(userId, destId, msgId, pageSize);
     }
 
     @GetMapping("/test")

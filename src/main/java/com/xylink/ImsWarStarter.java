@@ -1,9 +1,14 @@
 package com.xylink;
 
+import com.xylink.listener.ImsServicetContextListener;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 /**
  * Created by konglk on 2018/8/27.
@@ -13,6 +18,12 @@ public class ImsWarStarter extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(ImsWarStarter.class);
+    }
+
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        servletContext.addListener(ImsServicetContextListener.class);
+        super.onStartup(servletContext);
     }
 
     public static void main(String[] args) throws Exception {

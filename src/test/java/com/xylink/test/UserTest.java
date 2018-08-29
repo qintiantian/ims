@@ -112,8 +112,7 @@ public class UserTest {
 
     @Test
     public void selHistoryMsg() {
-        PageRequest pageRequest = new PageRequest(10, 30);
-        System.out.println(msgService.selectHistoryMessageById("eb7687c6-da11-4d23-bc71-36c4a12b2247", "78ad305d-226e-4155-93e2-357ce376a194", pageRequest));
+        System.out.println(msgService.selectHistoryMessageById("eb7687c6-da11-4d23-bc71-36c4a12b2247", "78ad305d-226e-4155-93e2-357ce376a194", "b310147c-7405-413e-989b-5d1f3223f212",20));
     }
 
     @Test

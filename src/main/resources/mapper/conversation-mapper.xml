@@ -28,7 +28,7 @@
 
     <select id="selConversationId" resultType="java.lang.String">
         select conversation_id from ims_conversation c
-        where (c.user_id=#{sendId} and c.dest_id=#{destId}) or (c.dest_id=#{destId} and c.user_id=#{sendId})
+        where (c.user_id=#{sendId} and c.dest_id=#{destId}) or (c.user_id=#{destId} and c.dest_id=#{sendId})
     </select>
 
 </mapper>
