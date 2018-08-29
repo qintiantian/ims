@@ -9,9 +9,9 @@
     </insert>
 
     <select id="selectConversationByUserId" resultType="java.util.HashMap">
-        select u.img_url as imgUrl, u.nickname, d.destId, u.username, d.last_date as lastDate, d.content as lastMsg
+        select u.img_url as imgUrl, u.nickname, d.destId, u.username, d.last_date as lastDate, d.content as lastMsg, d.msg_id as msgId
             from ims_user u join
-            (select m.content,c.last_date, (CASE
+            (select m.msg_id, m.content,c.last_date, (CASE
             WHEN c.user_id = #{userId} THEN
                 c.dest_id
             ELSE
@@ -26,8 +26,8 @@
         order by d.last_date desc
     </select>
 
-    <select id="selConversationId" resultType="java.lang.String">
-        select conversation_id from ims_conversation c
+    <select id="selConversation" resultType="com.xylink.entity.ConversationVO">
+        select * from ims_conversation c
         where (c.user_id=#{sendId} and c.dest_id=#{destId}) or (c.user_id=#{destId} and c.dest_id=#{sendId})
     </select>
 

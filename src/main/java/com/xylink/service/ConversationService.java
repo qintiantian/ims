@@ -1,6 +1,7 @@
 package com.xylink.service;
 
 import com.xylink.common.DataProcess;
+import com.xylink.entity.ConversationVO;
 import com.xylink.mappers.ConversationDao;
 import com.xylink.utils.DateFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class ConversationService {
         conversationDao.updateConversationDate(cur, conversationId);
     }
 
-    public String getConversationId(String sendId, String destId) {
-        return conversationDao.selConversationId(sendId, destId);
+    public ConversationVO getConversation(String sendId, String destId) {
+        return conversationDao.selConversation(sendId, destId);
     }
 }

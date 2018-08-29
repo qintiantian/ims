@@ -23,5 +23,5 @@ public interface ConversationDao {
     @Update("update ims_conversation set last_date=#{{newDate} where conversation_id=#{conversationId}")
     void updateConversationDate(@Param("newDate") Long newDate, @Param("conversationId") String conversationId);
 
-    String selConversationId(@Param("sendId") String sendId, @Param("destId") String destId );
+    ConversationVO selConversation(@Param("sendId") String sendId, @Param("destId") String destId );
 }

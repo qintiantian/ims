@@ -117,6 +117,6 @@ public class UserTest {
 
     @Test
     public void selConversationId() {
-        System.out.println(conversationService.getConversationId("eb7687c6-da11-4d23-bc71-36c4a12b2247", "78ad305d-226e-4155-93e2-357ce376a194"));
+        System.out.println(conversationService.getConversation("eb7687c6-da11-4d23-bc71-36c4a12b2247", "78ad305d-226e-4155-93e2-357ce376a194"));
     }
 }

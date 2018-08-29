@@ -1,6 +1,7 @@
 package com.xylink.service;
 
 import com.xylink.common.DataProcess;
+import com.xylink.entity.ConversationVO;
 import com.xylink.entity.MsgVO;
 import com.xylink.enums.MsgConfig;
 import com.xylink.mappers.MsgDao;
@@ -33,7 +34,8 @@ public class MsgService {
         msgVO.setMsgId(UUID.randomUUID().toString());
         msgVO.setHasRead(MsgConfig.NOT_READ);
         msgDao.insertMsg(msgVO);
-        conversationService.updateLastDate(msgVO.getConversationId());
+        ConversationVO conversationVO = conversationService.getConversation(msgVO.getSendId(), msgVO.getDestId());
+        conversationService.updateLastDate(conversationVO.getConversationId());
     }
 
     public List<Map<String,Object>> selectHistoryMessageById(String sendId, String destId, String msgId, int pageSize){
@@ -57,7 +59,7 @@ public class MsgService {
         msgVO.setDestId(msg.getDestId());
         msgVO.setMsgId(UUID.randomUUID().toString());
         msgVO.setMsgType(msg.getDataType().getNumber());
-        msgVO.setConversationId(conversationService.getConversationId(msg.getUserId(), msg.getDestId()));
+        msgVO.setConversationId(conversationService.getConversation(msg.getUserId(), msg.getDestId()).getConversationId());
         return msgVO;
     }
 }
