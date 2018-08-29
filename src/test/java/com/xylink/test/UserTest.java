@@ -105,6 +105,8 @@ public class UserTest {
         msgVO.setSendId("eb7687c6-da11-4d23-bc71-36c4a12b2247");
         msgVO.setDestId("78ad305d-226e-4155-93e2-357ce376a194");
         msgVO.setContent("你好吗？");
+        msgVO.setConversationId(conversationService.getConversation("eb7687c6-da11-4d23-bc71-36c4a12b2247","78ad305d-226e-4155-93e2-357ce376a194").getConversationId());
+        msgService.insertMsg(msgVO);
     }
 
     @Autowired

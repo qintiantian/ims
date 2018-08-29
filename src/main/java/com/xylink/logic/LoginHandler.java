@@ -34,13 +34,14 @@ public class LoginHandler implements IMessageHandler {
         responseBuilder.setRespType(Protocol.ProtocolMessage.RequestType.LOGIN);
         Protocol.SResponse.Builder sResponseBuilder = Protocol.SResponse.newBuilder();
         UserVO userVO = authService.login(m);
+        boolean loginSucess = false;
         if (userVO != null) {
             logger.info("user [" + m.getUserId() + "] login sucess");
             ClientConnectionMap.buildSession(c, userVO.getUserId());
             sResponseBuilder.setCode(ImsConstants.SUCCESS_CODE);
             sResponseBuilder.setCertificate(c.getCertificate());
             sResponseBuilder.setUserId(userVO.getUserId());
-            messageProcessor.handleNotReadMessage(m.getUserId());
+            loginSucess = true;
         } else {
             sResponseBuilder.setCode(ImsConstants.FAIL_CODE);
             logger.warn("user [" + m.getUserId() + "] invalid user or password");
@@ -49,5 +50,12 @@ public class LoginHandler implements IMessageHandler {
         msgBuilder.setResponse(responseBuilder.build());
         Protocol.ProtocolMessage responseMessage = msgBuilder.build();
         ctx.writeAndFlush(responseMessage);
+        if(loginSucess) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+            messageProcessor.handleNotReadMessage(m.getUserId());
+        }
     }
 }
