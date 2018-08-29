@@ -38,9 +38,9 @@ public class MsgService {
         conversationService.updateLastDate(conversationVO.getConversationId());
     }
 
-    public List<Map<String,Object>> selectHistoryMessageById(String sendId, String destId, String msgId, int pageSize){
+    public List<Map<String,Object>> selectHistoryMessageById(String sendId, String destId, String msgId, int pageSize, int direct){
         List<Map<String,Object>> datas =
-                msgDao.selectHistoryMessageById(sendId, destId, msgId, pageSize);
+                msgDao.selectHistoryMessageById(sendId, destId, msgId, pageSize, direct);
         if(CollectionUtils.isEmpty(datas))
             return Collections.EMPTY_LIST;
         DataProcess.process(datas, new String[]{"createtime"}, new Function[]{DateFormatter::format});

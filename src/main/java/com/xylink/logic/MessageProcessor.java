@@ -3,6 +3,7 @@ package com.xylink.logic;
 import com.xylink.conn.ClientConnection;
 import com.xylink.conn.ClientConnectionMap;
 import com.xylink.protobuf.Protocol;
+import com.xylink.utils.ExecutorUtils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -15,8 +16,6 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by konglk on 2018/8/11.
@@ -24,7 +23,6 @@ import java.util.concurrent.Executors;
 @Component
 public class MessageProcessor {
     private Logger logger = LoggerFactory.getLogger(getClass());
-    private static ExecutorService executorService = Executors.newCachedThreadPool();
 
     @Autowired
     private MessageQueue messageQueue;
@@ -63,7 +61,7 @@ public class MessageProcessor {
     public void consume() {
         Random r = new Random();
         int internal = 100;
-        executorService.execute(() -> {
+        ExecutorUtils.executorService.execute(() -> {
             while (true) {
                 Protocol.CPrivateChat msg = messageQueue.pop();
                 if (msg == null) {
@@ -80,7 +78,7 @@ public class MessageProcessor {
 
     public void handleNotReadMessage(String userId) {
         //用户上线后推送所有未读消息
-        executorService.execute(() -> {
+        ExecutorUtils.executorService.execute(() -> {
             Protocol.CPrivateChat msg = messageQueue.notReadPop(userId);
             while (msg != null) {
                 process(msg);

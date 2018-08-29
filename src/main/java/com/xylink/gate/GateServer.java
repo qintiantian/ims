@@ -1,6 +1,7 @@
 package com.xylink.gate;
 
 import com.xylink.protobuf.Protocol;
+import com.xylink.utils.ExecutorUtils;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -67,12 +68,12 @@ public class GateServer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        new Thread(()->{
+        ExecutorUtils.executorService.execute(()->{
             try {
                 startGateServer();
             } catch (InterruptedException e) {
                 logger.error(e.getMessage(), e);
             }
-        }).start();
+        });
     }
 }

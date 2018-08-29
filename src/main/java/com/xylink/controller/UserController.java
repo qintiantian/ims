@@ -49,8 +49,11 @@ public class UserController {
     }
 
     @GetMapping("/historymessage/{userId}/{destId}/{msgId}/{pageSize}")
-    public Object historyMessage(@PathVariable String userId, @PathVariable String destId, @PathVariable String msgId, @PathVariable int pageSize){
-        return msgService.selectHistoryMessageById(userId, destId, msgId, pageSize);
+    public Object historyMessage(@PathVariable String userId, @PathVariable String destId, @PathVariable String msgId,
+                                 @PathVariable int pageSize, @RequestParam("direct") int direct){
+        if(direct == 1 || direct == -1)
+            return msgService.selectHistoryMessageById(userId, destId, msgId, pageSize, direct);
+        return "";
     }
 
     @GetMapping("/test")

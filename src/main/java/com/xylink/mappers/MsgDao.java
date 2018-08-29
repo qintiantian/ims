@@ -15,5 +15,5 @@ import java.util.Map;
 @Component("msgDao")
 public interface MsgDao {
     void insertMsg(MsgVO msgVO);
-    List<Map<String, Object>> selectHistoryMessageById(@Param("sendId") String sendId, @Param("destId") String destId, @Param("msgId")String msgId, @Param("pageSize")int pageSize);
+    List<Map<String, Object>> selectHistoryMessageById(@Param("sendId") String sendId, @Param("destId") String destId, @Param("msgId")String msgId, @Param("pageSize")int pageSize, @Param("direct")int direct);
 }

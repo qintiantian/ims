@@ -20,7 +20,7 @@ public interface ConversationDao {
     void insertConversation(ConversationVO vo);
     List<Map<String, Object>> selectConversationByUserId(String userId);
 
-    @Update("update ims_conversation set last_date=#{{newDate} where conversation_id=#{conversationId}")
+    @Update("update ims_conversation set last_date=#{newDate} where conversation_id=#{conversationId}")
     void updateConversationDate(@Param("newDate") Long newDate, @Param("conversationId") String conversationId);
 
     ConversationVO selConversation(@Param("sendId") String sendId, @Param("destId") String destId );

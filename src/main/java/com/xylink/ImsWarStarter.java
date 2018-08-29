@@ -22,7 +22,7 @@ public class ImsWarStarter extends SpringBootServletInitializer {
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-        servletContext.addListener(ImsServicetContextListener.class);
+        servletContext.addListener(new ImsServicetContextListener());
         super.onStartup(servletContext);
     }
 
