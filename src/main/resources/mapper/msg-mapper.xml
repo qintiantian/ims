@@ -14,9 +14,11 @@
         where ((m.send_id=#{sendId} and m.dest_id=#{destId}) or (m.send_id = #{destId} and m.dest_id=#{sendId}))
         and  m.ts
         <if test="direct==1">&gt;</if>
+        <if test="direct==2">&gt;=</if>
         <if test="direct==-1">&lt;</if>
+        <if test="direct==-2">&lt;=</if>
         (select mm.ts from ims_msg mm where mm.msg_id=#{msgId})
-        order by m.ts  <if test="direct==-1">desc</if>
+        order by m.ts  <if test="direct==-1 or direct==-2">desc</if>
         limit #{pageSize}
     </select>
 

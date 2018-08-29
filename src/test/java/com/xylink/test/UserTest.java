@@ -112,7 +112,7 @@ public class UserTest {
 
     @Test
     public void selHistoryMsg() {
-        System.out.println(msgService.selectHistoryMessageById("eb7687c6-da11-4d23-bc71-36c4a12b2247", "78ad305d-226e-4155-93e2-357ce376a194", "22cafd51-5737-4a48-9f58-348cbf241675",5, -1));
+        System.out.println(msgService.selectHistoryMessageById("eb7687c6-da11-4d23-bc71-36c4a12b2247", "78ad305d-226e-4155-93e2-357ce376a194", "22cafd51-5737-4a48-9f58-348cbf241675",5, 1));
     }
 
     @Test
