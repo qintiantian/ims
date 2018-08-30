@@ -15,7 +15,7 @@ public class DateFormatter {
         target.setTimeInMillis(millis);
         Calendar today = Calendar.getInstance();
         if(DateUtils.isSameDay(today, target)) {
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             return sdf.format(target.getTime());
         }
         today.add(Calendar.DAY_OF_MONTH, -1);
