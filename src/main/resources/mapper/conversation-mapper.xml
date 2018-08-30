@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xylink.mappers.ConversationDao">
-    <insert id="insertConversation" parameterType="com.xylink.entity.ConversationVO">
+<mapper namespace="com.konglk.mappers.ConversationDao">
+    <insert id="insertConversation" parameterType="com.konglk.entity.ConversationVO">
       insert into ims_conversation(conversation_id,user_id,dest_id,conversation_type,status,ts, last_date)
       values(#{conversationId},#{userId},#{destId},#{conversationType},#{status},#{ts}, #{lastDate})
     </insert>
@@ -33,7 +33,7 @@
         order by d.last_date desc
     </select>
 
-    <select id="selConversation" resultType="com.xylink.entity.ConversationVO">
+    <select id="selConversation" resultType="com.konglk.entity.ConversationVO">
         select * from ims_conversation c
         where (c.user_id=#{sendId} and c.dest_id=#{destId}) or (c.user_id=#{destId} and c.dest_id=#{sendId})
     </select>

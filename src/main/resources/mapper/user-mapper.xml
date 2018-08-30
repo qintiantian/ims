@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xylink.mappers.UserDao">
-    <insert id="insertUser" parameterType="com.xylink.entity.UserVO">
+<mapper namespace="com.konglk.mappers.UserDao">
+    <insert id="insertUser" parameterType="com.konglk.entity.UserVO">
       insert into ims_user(user_id,username,nickname,pwd,sugar,img_url,cellphone,sex,country,city,createtime,status,updatetime)
       values(#{userId},#{username},#{nickname},#{pwd},#{sugar},#{imgUrl},#{cellphone},#{sex},#{country},#{city},#{createtime},#{status},#{updatetime})
     </insert>
