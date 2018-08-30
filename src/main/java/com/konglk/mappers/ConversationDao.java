@@ -3,6 +3,7 @@ package com.konglk.mappers;
 import com.konglk.entity.ConversationVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
 
@@ -23,4 +24,6 @@ public interface ConversationDao {
     void updateConversationDate(@Param("newDate") Long newDate, @Param("conversationId") String conversationId);
 
     ConversationVO selConversation(@Param("sendId") String sendId, @Param("destId") String destId );
+    @Select("select * from ims_conversation where status=1")
+    List<ConversationVO> selAllConversation();
 }

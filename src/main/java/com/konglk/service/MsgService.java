@@ -28,6 +28,7 @@ public class MsgService {
     @Autowired
     private ConversationService conversationService;
 
+
     public void insertMsg(MsgVO msgVO) {
         msgVO.setTs(System.currentTimeMillis());
         msgVO.setMsgId(UUID.randomUUID().toString());

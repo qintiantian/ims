@@ -3,11 +3,14 @@ package com.konglk.test;
 import com.konglk.constants.ImsConstants;
 import com.konglk.entity.ConversationVO;
 import com.konglk.entity.MsgVO;
+import com.konglk.entity.UnreadCountVO;
 import com.konglk.entity.UserVO;
 import com.konglk.mappers.ConversationDao;
+import com.konglk.mappers.UnreadCountDao;
 import com.konglk.service.ConversationService;
 import com.konglk.service.MsgService;
 import com.konglk.service.UserService;
+import com.konglk.utils.IdBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -90,7 +94,7 @@ public class UserTest {
         vo.setStatus(1);
         vo.setTs(System.currentTimeMillis());
         vo.setConversationId(UUID.randomUUID().toString());
-        conversationDao.insertConversation(vo);
+//        conversationDao.insertConversation(vo);
     }
 
     @Test
@@ -119,5 +123,28 @@ public class UserTest {
     @Test
     public void selConversationId() {
         System.out.println(conversationService.getConversation("eb7687c6-da11-4d23-bc71-36c4a12b2247", "78ad305d-226e-4155-93e2-357ce376a194"));
+    }
+
+    @Autowired
+    private UnreadCountDao unreadCountDao;
+    @Test
+    public void unreadCountTest() {
+        List<ConversationVO> conversationVOS = conversationDao.selAllConversation();
+        for(ConversationVO vo:conversationVOS) {
+            //每个会话对应2个未读消息统计记录
+            UnreadCountVO unreadVO = new UnreadCountVO();
+            unreadVO.setConversationId(vo.getConversationId());
+            unreadVO.setUserId(vo.getUserId());
+            unreadVO.setUnreadCountId(IdBuilder.buildId());
+            unreadVO.setUnreadCount(0);
+            unreadCountDao.insertUnreadCount(unreadVO);
+
+            unreadVO = new UnreadCountVO();
+            unreadVO.setConversationId(vo.getConversationId());
+            unreadVO.setUnreadCount(0);
+            unreadVO.setUnreadCountId(IdBuilder.buildId());
+            unreadVO.setUserId(vo.getDestId());
+            unreadCountDao.insertUnreadCount(unreadVO);
+        }
     }
 }
