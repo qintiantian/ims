@@ -44,7 +44,7 @@ public class MessageProcessor {
             Channel channel = ctx.channel();
             //TODO increase seqNum
             Protocol.ProtocolMessage m = Protocol.ProtocolMessage.newBuilder()
-                    .setResponse(Protocol.ProtocolMessage.TResponse.newBuilder().setChat(msg).build())
+                    .setResponse(Protocol.ProtocolMessage.TResponse.newBuilder().setChat(msg).setRespType(Protocol.ProtocolMessage.RequestType.CHAT).build())
                     .build();
             ChannelFuture channelFuture = channel.writeAndFlush(m);
             channelFuture.addListener(new ChannelFutureListener() {

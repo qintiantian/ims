@@ -36,5 +36,6 @@ public class GateServerHandler extends SimpleChannelInboundHandler<Protocol.Prot
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         super.exceptionCaught(ctx, cause);
+        ctx.close();
     }
 }
