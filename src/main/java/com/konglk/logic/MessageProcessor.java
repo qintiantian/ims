@@ -3,7 +3,6 @@ package com.konglk.logic;
 import com.konglk.conn.ClientConnection;
 import com.konglk.conn.ClientConnectionMap;
 import com.konglk.protobuf.Protocol;
-import com.konglk.utils.ExecutorUtils;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -11,10 +10,12 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.Random;
 
 /**
@@ -26,6 +27,10 @@ public class MessageProcessor {
 
     @Autowired
     private MessageQueue messageQueue;
+    @Autowired
+    private ThreadPoolTaskExecutor taskExecutor;
+
+    private boolean stop = false;
 
     public void process(Protocol.CPrivateChat msg) {
         if (msg == null || StringUtils.isEmpty(msg.getDestId()))
@@ -61,9 +66,13 @@ public class MessageProcessor {
     public void consume() {
         Random r = new Random();
         int internal = 100;
-        ExecutorUtils.executorService.execute(() -> {
-            while (true) {
-                Protocol.CPrivateChat msg = messageQueue.pop();
+        taskExecutor.execute(() -> {
+            while (!stop) {
+                Protocol.CPrivateChat msg = null;
+                try {
+                    msg = messageQueue.pop();
+                } catch (Exception e) {
+                }
                 if (msg == null) {
                     try {
                         Thread.sleep(r.nextInt(internal));
@@ -78,12 +87,20 @@ public class MessageProcessor {
 
     public void handleNotReadMessage(String userId) {
         //用户上线后推送所有未读消息
-        ExecutorUtils.executorService.execute(() -> {
+        taskExecutor.execute(() -> {
             Protocol.CPrivateChat msg = messageQueue.notReadPop(userId);
             while (msg != null) {
                 process(msg);
                 msg = messageQueue.notReadPop(userId);
+                if(stop)
+                    break;
             }
         });
     }
+
+    @PreDestroy
+    private void stopConsume() {
+        this.stop = true;
+    }
+
 }

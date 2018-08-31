@@ -1,6 +1,7 @@
 package com.konglk.service;
 
 import com.konglk.common.DataProcess;
+import com.konglk.constants.ImsConstants;
 import com.konglk.entity.ConversationVO;
 import com.konglk.entity.UnreadCountVO;
 import com.konglk.mappers.ConversationDao;
@@ -8,6 +9,7 @@ import com.konglk.mappers.UnreadCountDao;
 import com.konglk.utils.DateFormatter;
 import com.konglk.utils.IdBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -26,26 +28,13 @@ public class ConversationService {
     private ConversationDao conversationDao;
     @Autowired
     private UnreadCountDao unreadCountDao;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     public void buildConversation(ConversationVO vo) {
         vo.setTs(System.currentTimeMillis());
         vo.setConversationId(IdBuilder.buildId());
         conversationDao.insertConversation(vo);
-
-        //每个会话对应2个未读消息统计记录
-        UnreadCountVO unreadVO = new UnreadCountVO();
-        unreadVO.setConversationId(vo.getConversationId());
-        unreadVO.setUserId(vo.getUserId());
-        unreadVO.setUnreadCountId(IdBuilder.buildId());
-        unreadVO.setUnreadCount(0);
-        unreadCountDao.insertUnreadCount(unreadVO);
-
-        unreadVO = new UnreadCountVO();
-        unreadVO.setConversationId(vo.getConversationId());
-        unreadVO.setUnreadCount(0);
-        unreadVO.setUnreadCountId(IdBuilder.buildId());
-        unreadVO.setUserId(vo.getDestId());
-        unreadCountDao.insertUnreadCount(unreadVO);
     }
 
     public List<Map<String,Object>> getConversationByUserId(String userId) {

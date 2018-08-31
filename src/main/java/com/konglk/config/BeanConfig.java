@@ -15,6 +15,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -46,6 +47,18 @@ public class BeanConfig {
 
     @Value("${spring.redis.timeout}")
     private int timeout;
+
+    @Value("${threadpool.core-pool-size}")
+    private int corePoolSize;
+
+    @Value("${threadpool.max-pool-size}")
+    private int maxPoolSize;
+
+    @Value("${threadpool.queue-capacity}")
+    private int queueCapacity;
+
+    @Value("${threadpool.keep-alive-seconds}")
+    private int keepAliveSeconds;
 
 
     @Bean
@@ -103,6 +116,17 @@ public class BeanConfig {
         registration.setName("AuthFilter");//设置优先级
         registration.setOrder(1);//设置优先级
         return registration;
+    }
+
+    @Bean
+    public ThreadPoolTaskExecutor threadPoolTaskExecutor(){
+        ThreadPoolTaskExecutor pool = new ThreadPoolTaskExecutor();
+        pool.setKeepAliveSeconds(keepAliveSeconds);
+        pool.setCorePoolSize(corePoolSize);//核心线程池数
+        pool.setMaxPoolSize(maxPoolSize); // 最大线程
+        pool.setQueueCapacity(queueCapacity);//队列容量
+        pool.setRejectedExecutionHandler(new java.util.concurrent.ThreadPoolExecutor.CallerRunsPolicy()); //队列满，线程被拒绝执行策略
+        return pool;
     }
 
 }

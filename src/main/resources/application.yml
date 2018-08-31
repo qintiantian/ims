@@ -27,3 +27,9 @@ spring:
 
 server:
   context-path: /ims/
+
+threadpool:
+  core-pool-size: 10
+  max-pool-size: 20
+  queue-capacity: 1000
+  keep-alive-seconds: 300
