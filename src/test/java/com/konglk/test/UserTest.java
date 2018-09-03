@@ -1,5 +1,8 @@
 package com.konglk.test;
 
+import com.github.tobato.fastdfs.domain.FileInfo;
+import com.github.tobato.fastdfs.domain.StorePath;
+import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.konglk.constants.ImsConstants;
 import com.konglk.entity.ConversationVO;
 import com.konglk.entity.MsgVO;
@@ -10,6 +13,7 @@ import com.konglk.mappers.UnreadCountDao;
 import com.konglk.service.ConversationService;
 import com.konglk.service.MsgService;
 import com.konglk.service.UserService;
+import com.konglk.utils.FastDfsUtils;
 import com.konglk.utils.IdBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +23,9 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,4 +154,17 @@ public class UserTest {
             unreadCountDao.insertUnreadCount(unreadVO);
         }
     }
+
+    @Autowired
+    private FastFileStorageClient client;
+
+    @Test
+    public void testUpload() throws FileNotFoundException {
+        FileInfo fileInfo = client.queryFileInfo("group1", "M00/00/00/rBET9luKjWWAYY3AAAABPj7c3sE2681_big.sh");
+        System.out.println(fileInfo);
+        FileInputStream in = new FileInputStream("d:\\trackerd.log");
+        StorePath storePath = client.uploadFile(in, 2702, "java", null);
+        System.out.println(storePath);
+    }
+
 }

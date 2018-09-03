@@ -7,6 +7,7 @@ import com.konglk.enums.MsgConfig;
 import com.konglk.mappers.MsgDao;
 import com.konglk.protobuf.Protocol;
 import com.konglk.utils.DateFormatter;
+import com.konglk.utils.IdBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -51,13 +52,14 @@ public class MsgService {
     public MsgVO buildMsg(Protocol.CPrivateChat msg) {
         MsgVO msgVO = new MsgVO();
         try {
-            msgVO.setContent(new String(msg.getContent().toByteArray(), "utf8"));
+            if(msg.getDataType() == Protocol.CPrivateChat.DataType.TXT)
+                msgVO.setContent(new String(msg.getContent().toByteArray(), "utf8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         msgVO.setSendId(msg.getUserId());
         msgVO.setDestId(msg.getDestId());
-        msgVO.setMsgId(UUID.randomUUID().toString());
+        msgVO.setMsgId(IdBuilder.buildId());
         msgVO.setMsgType(msg.getDataType().getNumber());
         msgVO.setConversationId(conversationService.getConversation(msg.getUserId(), msg.getDestId()).getConversationId());
         return msgVO;

@@ -13,4 +13,9 @@ public class HelloTest {
         System.out.println(arr[i++]);
     }
 
+    @Test
+    public void testUpload() {
+
+    }
+
 }

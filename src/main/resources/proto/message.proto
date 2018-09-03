@@ -31,6 +31,7 @@ message CPrivateChat {
     int32 seqNum = 6;
     int64 ts = 7;
     string msgId = 8;
+    string extName = 9;
 
     enum DataType {
         TXT = 0;

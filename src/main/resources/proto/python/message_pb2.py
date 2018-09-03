@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='message.proto',
   package='',
   syntax='proto3',
-  serialized_pb=_b('\n\rmessage.proto\"\xf3\x02\n\x0fProtocolMessage\x12*\n\x07request\x18\x01 \x01(\x0b\x32\x19.ProtocolMessage.TRequest\x12,\n\x08response\x18\x02 \x01(\x0b\x32\x1a.ProtocolMessage.TResponse\x1an\n\x08TRequest\x12-\n\x07reqType\x18\x01 \x01(\x0e\x32\x1c.ProtocolMessage.RequestType\x12\x16\n\x05login\x18\x02 \x01(\x0b\x32\x07.CLogin\x12\x1b\n\x04\x63hat\x18\x03 \x01(\x0b\x32\r.CPrivateChat\x1ar\n\tTResponse\x12.\n\x08respType\x18\x01 \x01(\x0e\x32\x1c.ProtocolMessage.RequestType\x12\x18\n\x04resp\x18\x02 \x01(\x0b\x32\n.SResponse\x12\x1b\n\x04\x63hat\x18\x03 \x01(\x0b\x32\r.CPrivateChat\"\"\n\x0bRequestType\x12\t\n\x05LOGIN\x10\x00\x12\x08\n\x04\x43HAT\x10\x01\"\xa5\x02\n\x0c\x43PrivateChat\x12\x0e\n\x06userId\x18\x01 \x01(\t\x12\x0e\n\x06\x64\x65stId\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\x0c\x12(\n\x08\x63hatType\x18\x04 \x01(\x0e\x32\x16.CPrivateChat.ChatType\x12(\n\x08\x64\x61taType\x18\x05 \x01(\x0e\x32\x16.CPrivateChat.DataType\x12\x0e\n\x06seqNum\x18\x06 \x01(\x05\x12\n\n\x02ts\x18\x07 \x01(\x03\x12\r\n\x05msgId\x18\x08 \x01(\t\">\n\x08\x44\x61taType\x12\x07\n\x03TXT\x10\x00\x12\t\n\x05VOICE\x10\x01\x12\t\n\x05VIDEO\x10\x02\x12\x07\n\x03IMG\x10\x03\x12\n\n\x06HYBRID\x10\x04\"%\n\x08\x43hatType\x12\x0b\n\x07ONE2ONE\x10\x00\x12\x0c\n\x08ONE2MANY\x10\x01\"\xc3\x01\n\x06\x43Login\x12\r\n\x05msgId\x18\x01 \x01(\t\x12\x0e\n\x06userId\x18\x02 \x01(\t\x12\x0b\n\x03pwd\x18\x03 \x01(\t\x12&\n\ndeviceType\x18\x04 \x01(\x0e\x32\x12.CLogin.DeviceType\x12\n\n\x02ts\x18\x05 \x01(\x03\x12\x0f\n\x07version\x18\x06 \x01(\x05\x12\x0e\n\x06seqNum\x18\x07 \x01(\x05\"8\n\nDeviceType\x12\x0b\n\x07\x41NDROID\x10\x00\x12\x07\n\x03IOS\x10\x01\x12\x0b\n\x07WINDOWS\x10\x02\x12\x07\n\x03MAC\x10\x03\"L\n\tSResponse\x12\x0c\n\x04\x63ode\x18\x01 \x01(\x05\x12\x0c\n\x04\x64\x65sc\x18\x02 \x01(\t\x12\x13\n\x0b\x63\x65rtificate\x18\x03 \x01(\t\x12\x0e\n\x06userId\x18\x04 \x01(\tB\nB\x08Protocolb\x06proto3')
+  serialized_pb=_b('\n\rmessage.proto\"\xf3\x02\n\x0fProtocolMessage\x12*\n\x07request\x18\x01 \x01(\x0b\x32\x19.ProtocolMessage.TRequest\x12,\n\x08response\x18\x02 \x01(\x0b\x32\x1a.ProtocolMessage.TResponse\x1an\n\x08TRequest\x12-\n\x07reqType\x18\x01 \x01(\x0e\x32\x1c.ProtocolMessage.RequestType\x12\x16\n\x05login\x18\x02 \x01(\x0b\x32\x07.CLogin\x12\x1b\n\x04\x63hat\x18\x03 \x01(\x0b\x32\r.CPrivateChat\x1ar\n\tTResponse\x12.\n\x08respType\x18\x01 \x01(\x0e\x32\x1c.ProtocolMessage.RequestType\x12\x18\n\x04resp\x18\x02 \x01(\x0b\x32\n.SResponse\x12\x1b\n\x04\x63hat\x18\x03 \x01(\x0b\x32\r.CPrivateChat\"\"\n\x0bRequestType\x12\t\n\x05LOGIN\x10\x00\x12\x08\n\x04\x43HAT\x10\x01\"\xb6\x02\n\x0c\x43PrivateChat\x12\x0e\n\x06userId\x18\x01 \x01(\t\x12\x0e\n\x06\x64\x65stId\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\x0c\x12(\n\x08\x63hatType\x18\x04 \x01(\x0e\x32\x16.CPrivateChat.ChatType\x12(\n\x08\x64\x61taType\x18\x05 \x01(\x0e\x32\x16.CPrivateChat.DataType\x12\x0e\n\x06seqNum\x18\x06 \x01(\x05\x12\n\n\x02ts\x18\x07 \x01(\x03\x12\r\n\x05msgId\x18\x08 \x01(\t\x12\x0f\n\x07\x65xtName\x18\t \x01(\t\">\n\x08\x44\x61taType\x12\x07\n\x03TXT\x10\x00\x12\t\n\x05VOICE\x10\x01\x12\t\n\x05VIDEO\x10\x02\x12\x07\n\x03IMG\x10\x03\x12\n\n\x06HYBRID\x10\x04\"%\n\x08\x43hatType\x12\x0b\n\x07ONE2ONE\x10\x00\x12\x0c\n\x08ONE2MANY\x10\x01\"\xc3\x01\n\x06\x43Login\x12\r\n\x05msgId\x18\x01 \x01(\t\x12\x0e\n\x06userId\x18\x02 \x01(\t\x12\x0b\n\x03pwd\x18\x03 \x01(\t\x12&\n\ndeviceType\x18\x04 \x01(\x0e\x32\x12.CLogin.DeviceType\x12\n\n\x02ts\x18\x05 \x01(\x03\x12\x0f\n\x07version\x18\x06 \x01(\x05\x12\x0e\n\x06seqNum\x18\x07 \x01(\x05\"8\n\nDeviceType\x12\x0b\n\x07\x41NDROID\x10\x00\x12\x07\n\x03IOS\x10\x01\x12\x0b\n\x07WINDOWS\x10\x02\x12\x07\n\x03MAC\x10\x03\"L\n\tSResponse\x12\x0c\n\x04\x63ode\x18\x01 \x01(\x05\x12\x0c\n\x04\x64\x65sc\x18\x02 \x01(\t\x12\x13\n\x0b\x63\x65rtificate\x18\x03 \x01(\t\x12\x0e\n\x06userId\x18\x04 \x01(\tB\nB\x08Protocolb\x06proto3')
 )
 
 
@@ -75,8 +75,8 @@ _CPRIVATECHAT_DATATYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=584,
-  serialized_end=646,
+  serialized_start=601,
+  serialized_end=663,
 )
 _sym_db.RegisterEnumDescriptor(_CPRIVATECHAT_DATATYPE)
 
@@ -97,8 +97,8 @@ _CPRIVATECHAT_CHATTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=648,
-  serialized_end=685,
+  serialized_start=665,
+  serialized_end=702,
 )
 _sym_db.RegisterEnumDescriptor(_CPRIVATECHAT_CHATTYPE)
 
@@ -127,8 +127,8 @@ _CLOGIN_DEVICETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=827,
-  serialized_end=883,
+  serialized_start=844,
+  serialized_end=900,
 )
 _sym_db.RegisterEnumDescriptor(_CLOGIN_DEVICETYPE)
 
@@ -323,6 +323,13 @@ _CPRIVATECHAT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='extName', full_name='CPrivateChat.extName', index=8,
+      number=9, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -338,7 +345,7 @@ _CPRIVATECHAT = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=392,
-  serialized_end=685,
+  serialized_end=702,
 )
 
 
@@ -411,8 +418,8 @@ _CLOGIN = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=688,
-  serialized_end=883,
+  serialized_start=705,
+  serialized_end=900,
 )
 
 
@@ -463,8 +470,8 @@ _SRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=885,
-  serialized_end=961,
+  serialized_start=902,
+  serialized_end=978,
 )
 
 _PROTOCOLMESSAGE_TREQUEST.fields_by_name['reqType'].enum_type = _PROTOCOLMESSAGE_REQUESTTYPE

@@ -18,10 +18,11 @@ public class MessageDispatcher {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private MessageQueue messageQueue;
+
     @Autowired
     private LoginHandler loginHandler;
+    @Autowired
+    private ChatHandler chatHandler;
 
 
     public void dispatch(ChannelHandlerContext ctx, Protocol.ProtocolMessage msg) {
@@ -34,10 +35,11 @@ public class MessageDispatcher {
                 loginHandler.process(ctx, msg);
                 break;
             case CHAT:
-                if (StringUtils.isEmpty(c.getUserId()))
+                if (StringUtils.isEmpty(c.getUserId())) {
                     logger.warn("not login");
+                }
                 else {
-                    messageQueue.push(msg.getRequest().getChat());
+                    chatHandler.process(ctx, msg);
                 }
                 break;
         }

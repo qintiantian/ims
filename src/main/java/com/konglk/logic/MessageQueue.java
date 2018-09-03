@@ -13,24 +13,16 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MessageQueue {
-    @Autowired
-    private AuthService authService;
-    @Autowired
-    private MsgService msgService;
+
     @Autowired
     private RedisManager redisManager;
 
     public void push( Protocol.CPrivateChat msg) {
-        if(authService.isValidMsg(msg)){
-            redisManager.lpush(ImsConstants.IMS_MESSAGES, msg);
-            msgService.insertMsg(msgService.buildMsg(msg));
-        }
+        redisManager.lpush(ImsConstants.IMS_MESSAGES, msg);
     }
 
     public void push2NotReadQueue(Protocol.CPrivateChat msg) {
-        if(authService.isValidMsg(msg)) {
-            redisManager.lpush(ImsConstants.IMS_NOT_READ_MESSAGES+msg.getDestId(), msg);
-        }
+        redisManager.lpush(ImsConstants.IMS_NOT_READ_MESSAGES+msg.getDestId(), msg);
     }
 
     public Protocol.CPrivateChat pop() {
