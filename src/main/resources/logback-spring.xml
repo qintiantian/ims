@@ -20,11 +20,11 @@
         <appender name="ROLLING"
                   class="ch.qos.logback.core.rolling.RollingFileAppender">
             <!-- 文件路径 -->
-            <file>/usr/local/log/ims.log</file>
+            <file>/Users/qintiantian/Documents/log/ims.log</file>
             <rollingPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
                 <!-- rollover daily -->
-                <fileNamePattern>/usr/local/log/ims_%d{yyyy-MM-dd}.%i.log
+                <fileNamePattern>/Users/qintiantian/Documents/log/ims_%d{yyyy-MM-dd}.%i.log
                 </fileNamePattern>
                 <!-- each file should be at most 10MB, keep 30 days worth of history,
                     but at most 1GB -->

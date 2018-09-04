@@ -4,14 +4,12 @@ import com.github.tobato.fastdfs.domain.FileInfo;
 import com.github.tobato.fastdfs.domain.StorePath;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.konglk.constants.ImsConstants;
-import com.konglk.entity.ConversationVO;
-import com.konglk.entity.MsgVO;
-import com.konglk.entity.UnreadCountVO;
-import com.konglk.entity.UserVO;
+import com.konglk.entity.*;
 import com.konglk.mappers.ConversationDao;
 import com.konglk.mappers.UnreadCountDao;
 import com.konglk.service.ConversationService;
 import com.konglk.service.MsgService;
+import com.konglk.service.RelationshipService;
 import com.konglk.service.UserService;
 import com.konglk.utils.FastDfsUtils;
 import com.konglk.utils.IdBuilder;
@@ -167,4 +165,16 @@ public class UserTest {
         System.out.println(storePath);
     }
 
+    @Autowired
+    private RelationshipService relationshipService;
+
+    @Test
+    public void insertRelationship(){
+        RelationshipVO relationshipVO = new RelationshipVO();
+        relationshipVO.setFromUser("eb7687c6-da11-4d23-bc71-36c4a12b2247");
+        relationshipVO.setToUser("78ad305d-226e-4155-93e2-357ce376a194");
+        relationshipVO.setRelationshipType(1);
+        relationshipVO.setStatus(2);
+        relationshipService.insertRelationship(relationshipVO);
+    }
 }

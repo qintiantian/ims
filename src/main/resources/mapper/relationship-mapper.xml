@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.konglk.mappers.RelationshipDao">
+
+    <select id="selectRelationshipByUserId" parameterType="String" resultType="com.konglk.data.UserData">
+        SELECT
+            u.user_id as userId, u.username, u.nickname, u.img_url as imgUrl, u.cellphone, u.sex, u.city, u.country,
+            (select ELT(interval( conv( hex( convert( left(u.nickname,1) using GBK)),16,10),
+0xB0A1,0xB0C5,0xB2C1,0xB4EE,0xB6EA,0xB7A2,0xB8C1,0xB9FE,0xBBF7,0xBFA6,0xC0AC,0xC2E8,0xC4C3,0xC5B6,0xC5BE,0xC6DA,0xC8BB,0xC8F6,0xCBFA,0xCDDA ,0xCEF4,0xD1B9,0xD4D1),
+'A','B','C','D','E','F','G','H','J','K','L','M','N','O','P','Q','R','S','T','W','X','Y','Z')) as fpinyin
+        FROM
+            ims_user u
+        WHERE
+            user_id IN(
+                SELECT
+                    (
+                        CASE
+                        WHEN from_user = #{userId} THEN
+                            to_user
+                        WHEN to_user = #{userId} THEN
+                            from_user
+                        END
+                    ) AS user_id
+                FROM
+                    ims_relationship
+                WHERE
+                    (relationship_type = 2 AND main_user = #{userId}) OR (relationship_type = 1)
+                    AND STATUS = 2
+            )
+            ORDER BY CONVERT( u.nickname USING gbk ) COLLATE gbk_chinese_ci ASC;
+
+    </select>
+
+</mapper>
