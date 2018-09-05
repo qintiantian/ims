@@ -11,6 +11,8 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import io.netty.handler.timeout.IdleStateHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +50,9 @@ public class GateServer implements CommandLineRunner {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ch.pipeline().addLast(new IdleStateHandler(10, 10, 30, TimeUnit.SECONDS));
+                        ch.pipeline().addLast(new ProtobufVarint32FrameDecoder());
                         ch.pipeline().addLast(new ProtobufDecoder(Protocol.ProtocolMessage.getDefaultInstance()));
+//                        ch.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
                         ch.pipeline().addLast(new ProtobufEncoder());
                         ch.pipeline().addLast(new GateServerHandler());
                     }
