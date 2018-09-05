@@ -14,8 +14,8 @@ public interface RelationshipDao {
     @Insert("insert into ims_relationship (id, from_user, to_user, relationship_type, main_user, status, createtime, updatetime) values (#{id}, #{fromUser}, #{toUser}, #{relationshipType}, #{mainUser}, #{status}, #{createtime}, #{updatetime})")
     int insertRelationship(RelationshipVO relationshipVO);
 
-    @Select("select * from ims_relationship where id=#{id}")
-    RelationshipVO selectRelationshipById(@Param("id") String id);
+    @Select("select * from ims_relationship where (from_user=#{fromUser} and to_user=#{toUser}) or (from_user=#{toUser} and to_user=#{fromUser}) limit 1")
+    RelationshipVO selectOneRelationship(@Param("fromUser") String fromUser, @Param("toUser") String toUser);
 
     /**
      * 通过好友验证
@@ -25,8 +25,8 @@ public interface RelationshipDao {
      * @param updatetime
      * @return
      */
-    @Update("update ims_relationship set status=#{status}, updatetime=#{updatetime} where id=#{id}")
-    int passRelationship(@Param("id") String id, @Param("status") Integer status, @Param("updatetime") Long updatetime);
+    @Update("update ims_relationship set status=#{status}, updatetime=#{updatetime} where from_user=#{fromUser} and to_user=#{toUser}")
+    int passRelationship(@Param("fromUser") String fromUser, @Param("toUser") String toUser, @Param("status") Integer status, @Param("updatetime") Long updatetime);
 
     /**
      * 单向好友删除
@@ -56,4 +56,11 @@ public interface RelationshipDao {
      * @return
      */
     List<UserData> selectRelationshipByUserId(String userId);
+
+    /**
+     * 获取新朋友
+     * @param userId
+     * @return
+     */
+    List<UserData> selectNewFriendsByUserId(String userId);
 }

@@ -16,12 +16,8 @@
             user_id IN(
                 SELECT
                     (
-                        CASE
-                        WHEN from_user = #{userId} THEN
-                            to_user
-                        WHEN to_user = #{userId} THEN
-                            from_user
-                        END
+                        CASE WHEN from_user = #{userId} THEN to_user
+                             WHEN to_user = #{userId} THEN from_user END
                     ) AS user_id
                 FROM
                     ims_relationship
@@ -33,4 +29,22 @@
 
     </select>
 
+    <select id="selectNewFriendsByUserId" parameterType="String" resultType="com.konglk.data.UserData">
+        SELECT
+            u.user_id, u.username, u.nickname, u.img_url, u.cellphone, u.sex, u.city, u.country, temp.STATUS
+        FROM
+            (
+                SELECT
+                    (
+                        CASE WHEN from_user = #{userId} THEN to_user
+                             WHEN to_user = #{userId} THEN from_user END
+                    ) AS user_id , `status`, createtime
+                FROM
+                    ims_relationship
+                WHERE
+                    createtime >=(SELECT createtime FROM ims_relationship WHERE (from_user = #{userId} OR to_user = #{userId}) AND STATUS=1 ORDER BY createtime LIMIT 1)
+            ) AS temp, ims_user u
+        WHERE
+            temp.user_id = u.user_id order by temp.createtime desc
+    </select>
 </mapper>

@@ -6,6 +6,7 @@ import lombok.ToString;
 @Data
 @ToString
 public class UserData {
+    private String relationshipId;
     private String userId;
     private String username;
     private String nickname;

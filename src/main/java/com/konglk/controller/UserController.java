@@ -70,13 +70,24 @@ public class UserController {
     public Object findUserRelationships(@PathVariable("userId")String userId) {
         Map<String, List<UserData>> relationshipMap = relationshipService.selectRelationshipByUserId(userId);
 
-        return !relationshipMap.isEmpty() ? relationshipMap : Collections.emptySet();
+        return !relationshipMap.isEmpty() ? relationshipMap : Collections.emptyMap();
+    }
+
+    /**
+     * 查询新朋友
+     * @param userId
+     * @return
+     */
+    @GetMapping("/{userId}/relationships/new")
+    public Object findUserNewFriends(@PathVariable("userId")String userId) {
+        List<UserData> newFriendsList = relationshipService.selectNewFriendsByUserId(userId);
+
+        return !newFriendsList.isEmpty() ? newFriendsList : Collections.emptyList();
     }
 
     /**
      * 添加好友
      * @param userId
-     * @param fromUser
      * @param toUser
      * @return
      */
@@ -89,24 +100,35 @@ public class UserController {
     /**
      * 通过好友验证
      * @param userId
-     * @param id
+     * @param fromUser
      * @return
      */
-    @PostMapping("/{userId}/relationships/{relationshipId}/pass")
-    public Object passRelationship(@PathVariable("userId") String userId, @PathVariable("relationshipId") String id){
-        return this.relationshipService.passRelationship(id);
+    @PostMapping("/{userId}/relationships/{fromUser}/pass")
+    public Object passRelationship(@PathVariable("userId") String userId, @PathVariable("fromUser") String fromUser){
+        return this.relationshipService.passRelationship(fromUser, userId);
     }
 
     /**
      * 删除好友
      * @param userId
-     * @param id
+     * @param toUser
      * @return
      */
-    @DeleteMapping("/{userId}/relationships/{relationshipId}")
-    public Object delRelationship(@PathVariable("userId") String userId, @PathVariable("relationshipId") String id){
-        this.relationshipService.delRelationship(id, userId);
+    @DeleteMapping("/{userId}/relationships/{toUser}/delete")
+    public Object delRelationship(@PathVariable("userId") String userId, @PathVariable("toUser") String toUser){
+        this.relationshipService.delRelationship(userId, toUser);
         return "";
+    }
+
+    /**
+     * 查询好友详情
+     * @param userId
+     * @return
+     */
+    @GetMapping("/{userId}/relationships/{toUser}/detail")
+    public Object getFriendDetail(@PathVariable("userId")String userId, @PathVariable("toUser") String toUser) {
+        Map<String, Object> friend = userService.selecUserById(toUser);
+        return friend;
     }
 
     @GetMapping("/test")

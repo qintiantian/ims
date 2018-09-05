@@ -26,6 +26,12 @@ public class RelationshipService {
         this.relationshipDao.insertRelationship(relationshipVO);
     }
 
+    /**
+     * 获取好友列表
+     *
+     * @param userId
+     * @return
+     */
     public Map<String, List<UserData>> selectRelationshipByUserId(String userId) {
         List<UserData> relationshipList = relationshipDao.selectRelationshipByUserId(userId);
         Map<String, List<UserData>> relationshipMap = new HashMap<>();
@@ -42,13 +48,23 @@ public class RelationshipService {
     }
 
     /**
-     * 通过还有验证
+     * 获取新朋友
+     *
+     * @param userId
+     * @return
+     */
+    public List<UserData> selectNewFriendsByUserId(String userId) {
+        return relationshipDao.selectNewFriendsByUserId(userId);
+    }
+
+    /**
+     * 通过好友验证
      *
      * @param id
      * @return
      */
-    public int passRelationship(String id) {
-        return this.relationshipDao.passRelationship(id, RelationshipConfig.Status.PASS.v, System.currentTimeMillis());
+    public int passRelationship(String fromUser, String toUser) {
+        return this.relationshipDao.passRelationship(fromUser, toUser, RelationshipConfig.Status.PASS.v, System.currentTimeMillis());
     }
 
     /**
@@ -57,12 +73,12 @@ public class RelationshipService {
      * @param id
      * @return
      */
-    public void delRelationship(String id, String userId) {
-        RelationshipVO relationship = this.relationshipDao.selectRelationshipById(id);
+    public void delRelationship(String userId, String toUser) {
+        RelationshipVO relationship = this.relationshipDao.selectOneRelationship(userId, toUser);
         if (relationship != null) {
             // 删除双向好友
             if (relationship.getRelationshipType() == RelationshipConfig.RelationshipType.ONEWAY.v) {
-                this.relationshipDao.delTwoWayRelationship(id);
+                this.relationshipDao.delTwoWayRelationship(relationship.getId());
                 // 删除单向好友
             } else if (relationship.getRelationshipType() == RelationshipConfig.RelationshipType.TWOWAY.v) {
                 String mainUser = "";
@@ -71,7 +87,7 @@ public class RelationshipService {
                 } else if (relationship.getToUser().equals(userId)) {
                     mainUser = relationship.getFromUser();
                 }
-                this.relationshipDao.delOneWayRelationship(id, RelationshipConfig.RelationshipType.ONEWAY.v, mainUser, System.currentTimeMillis());
+                this.relationshipDao.delOneWayRelationship(relationship.getId(), RelationshipConfig.RelationshipType.ONEWAY.v, mainUser, System.currentTimeMillis());
             }
         }
     }

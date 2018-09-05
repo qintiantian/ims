@@ -57,14 +57,14 @@ public class UserTest {
     public void insert2DB() {
         UserVO userVO = new UserVO();
         userVO.setUserId(UUID.randomUUID().toString());
-        userVO.setUsername("点点");
-        userVO.setNickname("小点");
+        userVO.setUsername("树树");
+        userVO.setNickname("小树");
         userVO.setCountry("ch");
         userVO.setCity("wuhan");
 
-        userVO.setImgUrl("http://192.168.1.21/imgs/diandian.png");
-        String pwd = "diandian";
-        userVO.setCellphone("13477907301");
+        userVO.setImgUrl("http://192.168.1.21/imgs/shushu.png");
+        String pwd = "shushu";
+        userVO.setCellphone("13477907304");
         userVO.setPwd(pwd);
         userService.insertUser(userVO);
     }
@@ -170,11 +170,8 @@ public class UserTest {
 
     @Test
     public void insertRelationship(){
-        RelationshipVO relationshipVO = new RelationshipVO();
-        relationshipVO.setFromUser("eb7687c6-da11-4d23-bc71-36c4a12b2247");
-        relationshipVO.setToUser("78ad305d-226e-4155-93e2-357ce376a194");
-        relationshipVO.setRelationshipType(1);
-        relationshipVO.setStatus(2);
-        relationshipService.insertRelationship(relationshipVO);
+        String fromUser = "eb7687c6-da11-4d23-bc71-36c4a12b2247";
+        String toUser = "78ad305d-226e-4155-93e2-357ce376a194";
+        relationshipService.insertRelationship(fromUser, toUser);
     }
 }
