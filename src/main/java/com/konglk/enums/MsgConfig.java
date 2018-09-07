@@ -9,7 +9,7 @@ public class MsgConfig {
     public static int NOT_READ = 0;
 
     public enum MsgType {
-        TXT(1), IMG(2), VOICE(3), VIDEO(4);
+        TXT(0), VOICE(1), VIDEO(2), IMG(3), HYBRID(4), UNRECOGNIZED(-1);
         private MsgType(int v){
             this.v = v;
         }

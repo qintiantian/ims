@@ -9,7 +9,7 @@
     </insert>
 
     <select id="selectHistoryMessageById" resultType="java.util.HashMap">
-        select m.msg_id as msgId, m.send_id as sendId, m.dest_id as destId, m.content,m.ts as createtime
+        select m.msg_id as msgId, m.send_id as sendId, m.dest_id as destId, m.msg_type as msgType, m.content,m.ts as createtime
         from ims_msg m
         where ((m.send_id=#{sendId} and m.dest_id=#{destId}) or (m.send_id = #{destId} and m.dest_id=#{sendId}))
         and  m.ts

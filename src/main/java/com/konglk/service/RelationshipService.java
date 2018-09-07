@@ -34,7 +34,7 @@ public class RelationshipService {
      */
     public Map<String, List<UserData>> selectRelationshipByUserId(String userId) {
         List<UserData> relationshipList = relationshipDao.selectRelationshipByUserId(userId);
-        Map<String, List<UserData>> relationshipMap = new HashMap<>();
+        Map<String, List<UserData>> relationshipMap = new LinkedHashMap<>();
         relationshipList.stream().forEach(relationship -> {
             if (relationshipMap.containsKey(relationship.getFpinyin())) {
                 relationshipMap.get(relationship.getFpinyin()).add(relationship);
