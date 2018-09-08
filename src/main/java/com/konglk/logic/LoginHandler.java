@@ -12,6 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 
 /**
  * Created by konglk on 2018/8/25.
@@ -29,6 +33,7 @@ public class LoginHandler implements IMessageHandler {
     public void process(ChannelHandlerContext ctx, Protocol.ProtocolMessage message) {
         ClientConnection c = ClientConnectionMap.getClientConnection(ctx.channel().attr(ClientConnection.netIdKey).get());
         Protocol.CLogin m = message.getRequest().getLogin();
+        m = decode(m);
         Protocol.ProtocolMessage.Builder msgBuilder = Protocol.ProtocolMessage.newBuilder();
         Protocol.ProtocolMessage.TResponse.Builder responseBuilder = Protocol.ProtocolMessage.TResponse.newBuilder();
         responseBuilder.setRespType(Protocol.ProtocolMessage.RequestType.LOGIN);
@@ -57,5 +62,27 @@ public class LoginHandler implements IMessageHandler {
             }
             messageProcessor.handleNotReadMessage(m.getUserId());
         }
+    }
+
+    private Protocol.CLogin decode(Protocol.CLogin m){
+        String userId = m.getUserId();
+        String pwd = m.getPwd();
+        if(StringUtils.isEmpty(userId) || StringUtils.isEmpty(pwd))
+            throw new IllegalArgumentException("error argument");
+        String s1 = "konglingkai";
+        String s2 = "qintiantian";
+        Base64.Decoder decoder = Base64.getDecoder();
+        try {
+            String t1 = new String(decoder.decode(userId),"utf8");
+            String t2 = new String(decoder.decode(pwd), "utf8");
+            if(t1.startsWith(s1))
+                userId = t1.substring(s1.length());
+            if(t2.startsWith(s2))
+                pwd = t2.substring(s2.length());
+            return Protocol.CLogin.newBuilder().mergeFrom(m).setUserId(userId).setPwd(pwd).build();
+        } catch (UnsupportedEncodingException e) {
+            logger.error(e.getMessage());
+        }
+        return m;
     }
 }

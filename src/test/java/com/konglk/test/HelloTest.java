@@ -8,9 +8,7 @@ import org.junit.Test;
 public class HelloTest {
     @Test
     public void test(){
-        int[] arr = {0,1,2,3,4};
-        int i=1;
-        System.out.println(arr[i++]);
+        System.out.println(~1);
     }
 
     @Test
