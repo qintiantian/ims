@@ -1,6 +1,8 @@
 im:
   gate:
     port: 8090
+  webrtc:
+    port: 3000
   auth:
     port: 8081
     ip: localhost

@@ -46,8 +46,6 @@ public class ChatHandler implements IMessageHandler {
                     msgVO.setContent(storePath.getFullPath());
                     msgService.insertMsg(msgVO);
                     try {
-//                        Protocol.CPrivateChat.newBuilder().setChatType(chat.getChatType()).setContent(ByteString.copyFrom(storePath.getFullPath(), "utf8"))
-//                            .setDataType(chat.getDataType()).setTs(chat.getTs()).setDestId(chat.getDestId());
                         Protocol.CPrivateChat newChat =
                                 Protocol.CPrivateChat.newBuilder().mergeFrom(chat).setContent(ByteString.copyFrom(storePath.getFullPath(), "utf8")).build();
                         messageQueue.push(newChat);

@@ -1,6 +1,10 @@
 package com.konglk;
 
 import com.github.tobato.fastdfs.FdfsClientConfig;
+import com.konglk.gate.GateServer;
+import com.konglk.webrtc.WebRTCServer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -15,7 +19,7 @@ import org.springframework.jmx.support.RegistrationPolicy;
 @SpringBootApplication
 @Import({FdfsClientConfig.class})
 @EnableMBeanExport(registration = RegistrationPolicy.IGNORE_EXISTING)
-public class ImsWarStarter extends SpringBootServletInitializer {
+public class ImsWarStarter extends SpringBootServletInitializer implements CommandLineRunner {
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
         return application.sources(ImsWarStarter.class);
@@ -23,5 +27,17 @@ public class ImsWarStarter extends SpringBootServletInitializer {
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(ImsWarStarter.class, args);
+    }
+
+    @Autowired
+    private GateServer gateServer;
+
+    @Autowired
+    private WebRTCServer webRTCServer;
+
+    @Override
+    public void run(String... args) throws Exception {
+        gateServer.start();
+        webRTCServer.start();
     }
 }

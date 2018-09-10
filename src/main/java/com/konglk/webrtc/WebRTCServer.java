@@ -1,18 +1,16 @@
-package com.konglk.gate;
+package com.konglk.webrtc;
 
-import com.konglk.protobuf.Protocol;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
+import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.protobuf.ProtobufDecoder;
-import io.netty.handler.codec.protobuf.ProtobufEncoder;
-import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
-import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.util.concurrent.ImmediateEventExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +19,15 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
-import java.util.concurrent.TimeUnit;
 
 /**
- * Created by konglk on 2018/8/11.
+ * Created by konglk on 2018/9/9.
  */
 @Component
-public class GateServer {
+public class WebRTCServer {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Value("${im.gate.port}")
+    @Value("${im.webrtc.port}")
     public int port;
     @Autowired
     private ThreadPoolTaskExecutor taskExecutor;
@@ -38,8 +35,8 @@ public class GateServer {
     private EventLoopGroup bossGroup = new NioEventLoopGroup();
     private EventLoopGroup workerGroup = new NioEventLoopGroup();
 
-    private void  startGateServer() throws InterruptedException {
-        logger.info("start gate server at port " + port);
+    private void  startWebRTCServer() throws InterruptedException {
+        logger.info("start webrtc server at port " + port);
 
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup)
@@ -47,12 +44,12 @@ public class GateServer {
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new IdleStateHandler(10, 10, 30, TimeUnit.SECONDS));
-                        ch.pipeline().addLast(new ProtobufVarint32FrameDecoder());
-                        ch.pipeline().addLast(new ProtobufDecoder(Protocol.ProtocolMessage.getDefaultInstance()));
-//                        ch.pipeline().addLast(new ProtobufVarint32LengthFieldPrepender());
-                        ch.pipeline().addLast(new ProtobufEncoder());
-                        ch.pipeline().addLast(new GateServerHandler());
+                        ChannelPipeline pipeline = ch.pipeline();
+
+                        pipeline.addLast(new HttpServerCodec());
+                        pipeline.addLast(new HttpObjectAggregator(65536));
+                        pipeline.addLast(new ChunkedWriteHandler());
+                        pipeline.addLast(new TextWebSocketServerProtocolHandler());
                     }
                 })
                 .option(ChannelOption.SO_BACKLOG, 128)
@@ -65,15 +62,15 @@ public class GateServer {
 
     @PreDestroy
     private void shutdown() {
-       logger.info(("###########shutdown netty####################"));
+        logger.info(("###########shutdown webrtc####################"));
         workerGroup.shutdownGracefully();
         bossGroup.shutdownGracefully();
     }
 
-    public void start() {
+    public void start(){
         taskExecutor.execute(()->{
             try {
-                startGateServer();
+                startWebRTCServer();
             } catch (InterruptedException e) {
                 logger.error(e.getMessage(), e);
             }
