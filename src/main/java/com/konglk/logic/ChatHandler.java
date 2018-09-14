@@ -34,6 +34,8 @@ public class ChatHandler implements IMessageHandler {
         if(authService.isValidMsg(chat)){
             switch (chat.getDataType()){
                 case TXT:
+                    if(chat.getContent().isEmpty())
+                        return;
                     messageQueue.push(chat);
                     msgService.insertMsg(msgService.buildMsg(chat));
                     break;

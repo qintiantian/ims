@@ -141,6 +141,14 @@ public class TextWebSocketServerProtocolHandler extends SimpleChannelInboundHand
                 }
                 ctx.writeAndFlush(new TextWebSocketFrame(result.toString()));
                 break;
+            case "call":
+                result.put("type", "call");
+                result.put("caller", data.getString("userId"));
+                result.put("callee", data.getString("destId"));
+                destCtx = webrtcConnection.get(data.getString("destId"));
+                if(destCtx != null)
+                    destCtx.writeAndFlush(new TextWebSocketFrame(result.toString()));
+                break;
             case "offer":
                 logger.info("Sending offer to {}", userId);
                 destCtx = webrtcConnection.get(userId);
