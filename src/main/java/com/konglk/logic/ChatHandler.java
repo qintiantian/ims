@@ -51,10 +51,11 @@ public class ChatHandler implements IMessageHandler {
                         Protocol.CPrivateChat newChat =
                                 Protocol.CPrivateChat.newBuilder().mergeFrom(chat).setContent(ByteString.copyFrom(storePath.getFullPath(), "utf8")).build();
                         messageQueue.push(newChat);
+                        ctx.writeAndFlush(Protocol.ProtocolMessage.newBuilder().setResponse(Protocol.ProtocolMessage.TResponse.newBuilder().
+                                setChat(newChat).setRespType(Protocol.ProtocolMessage.RequestType.CHAT).build()));
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
-                    messageQueue.push(chat);
                     break;
             }
 
