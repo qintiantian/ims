@@ -9,9 +9,10 @@
     </insert>
 
     <select id="selectConversationByUserId" resultType="java.util.HashMap">
-        select u.img_url as imgUrl, u.nickname, d.destId, u.username, d.last_date as lastDate, d.content as lastMsg, d.msg_id as msgId
+        select u.img_url as imgUrl, u.nickname, d.destId, u.username, d.last_date as lastDate, d.content as lastMsg, d.msg_id as msgId,
+        d.msg_type as msgType
             from ims_user u join
-            (select im.msg_id, im.content,c.last_date, (CASE
+            (select im.msg_id, im.content,c.last_date, im.msg_type, (CASE
             WHEN c.user_id = #{userId} THEN
                 c.dest_id
             ELSE
@@ -21,7 +22,8 @@
             (select * from (SELECT
 				m.conversation_id,
 				m.content,
-				m.msg_id
+				m.msg_id,
+				m.msg_type
 			FROM
 				ims_msg m
 			ORDER BY
