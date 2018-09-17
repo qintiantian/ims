@@ -28,16 +28,20 @@ public class ChatHandler implements IMessageHandler {
     private MsgService msgService;
     @Autowired
     private FastFileStorageClient storageClient;
+
     @Override
     public void process(ChannelHandlerContext ctx, Protocol.ProtocolMessage message) {
         Protocol.CPrivateChat chat = message.getRequest().getChat();
         if(authService.isValidMsg(chat)){
+            //服务器收到消息后会将消息转发并把这条成功消息推送给发送客户端
             switch (chat.getDataType()){
                 case TXT:
                     if(chat.getContent().isEmpty())
                         return;
                     messageQueue.push(chat);
                     msgService.insertMsg(msgService.buildMsg(chat));
+                    ctx.writeAndFlush(Protocol.ProtocolMessage.newBuilder().setResponse(Protocol.ProtocolMessage.TResponse.newBuilder().
+                            setChat(chat).setRespType(Protocol.ProtocolMessage.RequestType.CHAT).build()));
                     break;
                 case VOICE:
                 case IMG:
