@@ -38,10 +38,11 @@ public class ChatHandler implements IMessageHandler {
                 case TXT:
                     if(chat.getContent().isEmpty())
                         return;
-                    messageQueue.push(chat);
-                    msgService.insertMsg(msgService.buildMsg(chat));
+                    Protocol.CPrivateChat txtChat = Protocol.CPrivateChat.newBuilder().mergeFrom(chat).setTs(System.currentTimeMillis()).build();
+                    messageQueue.push(txtChat);
+                    msgService.insertMsg(msgService.buildMsg(txtChat));
                     ctx.writeAndFlush(Protocol.ProtocolMessage.newBuilder().setResponse(Protocol.ProtocolMessage.TResponse.newBuilder().
-                            setChat(chat).setRespType(Protocol.ProtocolMessage.RequestType.CHAT).build()));
+                            setChat(txtChat).setRespType(Protocol.ProtocolMessage.RequestType.CHAT).build()));
                     break;
                 case VOICE:
                 case IMG:
@@ -52,11 +53,13 @@ public class ChatHandler implements IMessageHandler {
                     msgVO.setContent(storePath.getFullPath());
                     msgService.insertMsg(msgVO);
                     try {
-                        Protocol.CPrivateChat newChat =
-                                Protocol.CPrivateChat.newBuilder().mergeFrom(chat).setContent(ByteString.copyFrom(storePath.getFullPath(), "utf8")).build();
-                        messageQueue.push(newChat);
+                        Protocol.CPrivateChat imgChat =
+                                Protocol.CPrivateChat.newBuilder().mergeFrom(chat).
+                                        setContent(ByteString.copyFrom(storePath.getFullPath(), "utf8")).
+                                        setTs(System.currentTimeMillis()).build();
+                        messageQueue.push(imgChat);
                         ctx.writeAndFlush(Protocol.ProtocolMessage.newBuilder().setResponse(Protocol.ProtocolMessage.TResponse.newBuilder().
-                                setChat(newChat).setRespType(Protocol.ProtocolMessage.RequestType.CHAT).build()));
+                                setChat(imgChat).setRespType(Protocol.ProtocolMessage.RequestType.CHAT).build()));
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }

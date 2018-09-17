@@ -31,9 +31,7 @@ public class MsgService {
 
 
     public void insertMsg(MsgVO msgVO) {
-        msgVO.setTs(System.currentTimeMillis());
         msgVO.setMsgId(UUID.randomUUID().toString());
-        msgVO.setHasRead(MsgConfig.NOT_READ);
         msgDao.insertMsg(msgVO);
         ConversationVO conversationVO = conversationService.getConversation(msgVO.getSendId(), msgVO.getDestId());
         conversationService.updateLastDate(conversationVO.getConversationId());
@@ -61,6 +59,8 @@ public class MsgService {
         msgVO.setDestId(msg.getDestId());
         msgVO.setMsgId(IdBuilder.buildId());
         msgVO.setMsgType(msg.getDataType().getNumber());
+        msgVO.setTs(msg.getTs()==0 ? System.currentTimeMillis() : msg.getTs());
+        msgVO.setHasRead(MsgConfig.NOT_READ);
         msgVO.setConversationId(conversationService.getConversation(msg.getUserId(), msg.getDestId()).getConversationId());
         return msgVO;
     }
