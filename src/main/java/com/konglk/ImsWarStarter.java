@@ -38,6 +38,6 @@ public class ImsWarStarter extends SpringBootServletInitializer implements Comma
     @Override
     public void run(String... args) throws Exception {
         gateServer.start();
-        webRTCServer.start();
+//        webRTCServer.start();
     }
 }

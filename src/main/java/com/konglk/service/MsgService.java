@@ -42,7 +42,7 @@ public class MsgService {
                 msgDao.selectHistoryMessageById(sendId, destId, msgId, pageSize, direct);
         if(CollectionUtils.isEmpty(datas))
             return Collections.EMPTY_LIST;
-        DataProcess.process(datas, new String[]{"createtime"}, new Function[]{DateFormatter::format});
+//        DataProcess.process(datas, new String[]{"createtime"}, new Function[]{DateFormatter::format});
         return datas;
 
     }
