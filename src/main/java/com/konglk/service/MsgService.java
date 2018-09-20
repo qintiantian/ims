@@ -64,4 +64,11 @@ public class MsgService {
         msgVO.setConversationId(conversationService.getConversation(msg.getUserId(), msg.getDestId()).getConversationId());
         return msgVO;
     }
+
+    public List<String> selectImagesById(String sendId, String destId) {
+        List<String> images = msgDao.selectImagesById(sendId, destId);
+        if(CollectionUtils.isEmpty(images))
+            return Collections.emptyList();
+        return images;
+    }
 }

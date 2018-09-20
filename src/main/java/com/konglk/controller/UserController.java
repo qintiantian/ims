@@ -61,6 +61,11 @@ public class UserController {
         return "";
     }
 
+    @GetMapping("/historymessage/{userId}/{destId}/images")
+    public Object messageImages(@PathVariable String userId, @PathVariable String destId) {
+        return msgService.selectImagesById(userId, destId);
+    }
+
     /**
      * 查询好友列表
      * @param userId

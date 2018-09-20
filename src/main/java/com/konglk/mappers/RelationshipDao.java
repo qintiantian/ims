@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public interface RelationshipDao {
 
-    @Insert("insert into ims_relationship (id, from_user, to_user, relationship_type, main_user, status, createtime, updatetime) values (#{id}, #{fromUser}, #{toUser}, #{relationshipType}, #{mainUser}, #{status}, #{createtime}, #{updatetime})")
+    @Insert("insert into ims_relationship (id, from_user, to_user, relationship_type, main_user, status, greet, createtime, updatetime, remark) values (#{id}, #{fromUser}, #{toUser}, #{relationshipType}, #{mainUser}, #{status}, #{greet}, #{createtime}, #{updatetime}, #{remark})")
     int insertRelationship(RelationshipVO relationshipVO);
 
     @Select("select * from ims_relationship where (from_user=#{fromUser} and to_user=#{toUser}) or (from_user=#{toUser} and to_user=#{fromUser}) limit 1")

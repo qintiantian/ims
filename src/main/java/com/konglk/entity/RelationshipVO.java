@@ -15,6 +15,8 @@ public class RelationshipVO extends BaseEntity {
     private Integer relationshipType;
     private String mainUser;
     private Integer status;
+    private String greet;
     private Long createtime;
     private Long updatetime;
+    private String remark;
 }
