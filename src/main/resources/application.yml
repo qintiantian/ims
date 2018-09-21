@@ -24,7 +24,7 @@ spring:
         active: dev
     datasource:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://39.106.133.40/ims?useUnicode=true&characterEncoding=UTF-8
+        url: jdbc:mysql://39.106.133.40:3306/ims?useUnicode=true&characterEncoding=UTF-8
         username: root
         password: root
 
