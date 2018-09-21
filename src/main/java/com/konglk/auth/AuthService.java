@@ -6,10 +6,10 @@ import com.konglk.constants.ImsConstants;
 import com.konglk.entity.UserVO;
 import com.konglk.protobuf.Protocol;
 import com.konglk.service.UserService;
-import com.konglk.utils.EncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
@@ -31,7 +31,7 @@ public class AuthService {
         UserVO userVO = userService.selectUser(msg.getUserId());
         if(userVO == null)
             return null;
-        String encrptedpwd = EncryptUtils.crypt(userVO.getSugar()+msg.getPwd());
+        String encrptedpwd = DigestUtils.md5DigestAsHex((userVO.getSugar()+msg.getPwd()).getBytes());
         if(userVO.getPwd().equals(encrptedpwd))
             return userVO;
         return null;

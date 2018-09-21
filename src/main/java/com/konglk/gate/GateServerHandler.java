@@ -30,7 +30,11 @@ public class GateServerHandler extends SimpleChannelInboundHandler<Protocol.Prot
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Protocol.ProtocolMessage msg) throws Exception {
-        messageDispatcher.dispatch(ctx, msg);
+        try {
+            messageDispatcher.dispatch(ctx, msg);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
     }
 
     @Override
