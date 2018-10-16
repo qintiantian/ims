@@ -54,7 +54,7 @@ public class MessageProcessor {
                         messageQueue.push2NotReadQueue(msg);
                         future.channel().close();
                     } else {
-                        logger.info("user [" + msg.getUserId() + "] send msg to user [" + msg.getDestId() + "]");
+//                        logger.info("user [" + msg.getUserId() + "] send msg to user [" + msg.getDestId() + "]");
                     }
                 }
             });
