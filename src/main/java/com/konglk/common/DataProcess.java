@@ -11,6 +11,13 @@ import java.util.function.Function;
  * Created by konglk on 2018/8/28.
  */
 public class DataProcess {
+
+    /**
+     * 遍历列表处理数据，如果存在prop，调用consumer并设置新值
+     * @param datas
+     * @param props
+     * @param consumers
+     */
     public static void process(List<Map<String, Object>> datas, String[] props, Function<Object, Object>[] consumers) {
         if(CollectionUtils.isEmpty(datas) || ArrayUtils.isEmpty(props) || ArrayUtils.isEmpty(consumers))
             return;
@@ -20,8 +27,10 @@ public class DataProcess {
             for(int i=0; i<props.length; i++) {
                 String prop = props[i];
                 Function<Object,Object> f = consumers[i];
-                Object v = data.get(prop);
-                data.put(prop,f.apply(v));
+                if(data.containsKey(prop)) {
+                    Object v = data.get(prop);
+                    data.put(prop,f.apply(v));
+                }
             }
         }
     }

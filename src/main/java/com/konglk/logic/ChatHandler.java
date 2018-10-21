@@ -4,16 +4,15 @@ import com.github.tobato.fastdfs.domain.StorePath;
 import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.google.protobuf.ByteString;
 import com.konglk.auth.AuthService;
-import com.konglk.entity.MsgVO;
+import com.konglk.config.MqConfig;
 import com.konglk.protobuf.Protocol;
-import com.konglk.service.MsgService;
 import io.netty.channel.ChannelHandlerContext;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 
 /**
  * Created by konglk on 2018/9/2.
@@ -21,13 +20,12 @@ import java.nio.ByteBuffer;
 @Component
 public class ChatHandler implements IMessageHandler {
     @Autowired
-    private MessageQueue messageQueue;
-    @Autowired
     private AuthService authService;
-    @Autowired
-    private MsgService msgService;
+
     @Autowired
     private FastFileStorageClient storageClient;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Override
     public void process(ChannelHandlerContext ctx, Protocol.ProtocolMessage message) {
@@ -39,25 +37,21 @@ public class ChatHandler implements IMessageHandler {
                     if(chat.getContent().isEmpty())
                         return;
                     Protocol.CPrivateChat txtChat = Protocol.CPrivateChat.newBuilder().mergeFrom(chat).setTs(System.currentTimeMillis()).build();
-                    messageQueue.push(txtChat);
-                    msgService.insertMsg(msgService.buildMsg(txtChat));
+                    rabbitTemplate.convertAndSend(MqConfig.MESSAGE_TOPIC, MqConfig.ROUTING_KEY, txtChat);
                     ctx.writeAndFlush(Protocol.ProtocolMessage.newBuilder().setResponse(Protocol.ProtocolMessage.TResponse.newBuilder().
                             setChat(txtChat).setRespType(Protocol.ProtocolMessage.RequestType.CHAT).build()));
                     break;
                 case VOICE:
                 case IMG:
-                    MsgVO msgVO = msgService.buildMsg(chat);
                     ByteString bytes = chat.getContent();
                     ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes.toByteArray());
                     StorePath storePath = storageClient.uploadFile("group1", inputStream, (long) bytes.size(), chat.getExtName());
-                    msgVO.setContent(storePath.getFullPath());
-                    msgService.insertMsg(msgVO);
                     try {
                         Protocol.CPrivateChat imgChat =
                                 Protocol.CPrivateChat.newBuilder().mergeFrom(chat).
                                         setContent(ByteString.copyFrom(storePath.getFullPath(), "utf8")).
                                         setTs(System.currentTimeMillis()).build();
-                        messageQueue.push(imgChat);
+                        rabbitTemplate.convertAndSend(MqConfig.MESSAGE_TOPIC, MqConfig.ROUTING_KEY, imgChat);
                         ctx.writeAndFlush(Protocol.ProtocolMessage.newBuilder().setResponse(Protocol.ProtocolMessage.TResponse.newBuilder().
                                 setChat(imgChat).setRespType(Protocol.ProtocolMessage.RequestType.CHAT).build()));
                     } catch (UnsupportedEncodingException e) {

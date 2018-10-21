@@ -16,8 +16,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
 
 import javax.sql.DataSource;
 
@@ -84,18 +82,6 @@ public class BeanConfig {
 
 
     @Bean
-    public JedisPool jedisPool() {
-        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxTotal(maxActive);
-        jedisPoolConfig.setMaxIdle(maxIdle);
-        jedisPoolConfig.setMinIdle(minIdle);
-        jedisPoolConfig.setMaxWaitMillis(maxWait);
-        jedisPoolConfig.setTimeBetweenEvictionRunsMillis(timeout);
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout);
-        return jedisPool;
-    }
-
-    @Bean
     public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
         sessionFactoryBean.setDataSource(dataSource);
@@ -112,7 +98,8 @@ public class BeanConfig {
     public FilterRegistrationBean authFilter() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new AuthFilter());//添加过滤器
-        registration.addUrlPatterns("/user/*");//设置过滤路径，/*所有路径
+        String[] patterns = {"/user/*", "/msg/*", "/conversation/*"};//设置过滤路径，/*所有路径
+        registration.addUrlPatterns(patterns);
         registration.setName("AuthFilter");//设置优先级
         registration.setOrder(1);//设置优先级
         return registration;

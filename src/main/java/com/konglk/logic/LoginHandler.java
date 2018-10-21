@@ -55,13 +55,6 @@ public class LoginHandler implements IMessageHandler {
         msgBuilder.setResponse(responseBuilder.build());
         Protocol.ProtocolMessage responseMessage = msgBuilder.build();
         ctx.writeAndFlush(responseMessage);
-        if(loginSucess) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
-            messageProcessor.handleNotReadMessage(m.getUserId());
-        }
     }
 
     private Protocol.CLogin decode(Protocol.CLogin m){
@@ -69,8 +62,8 @@ public class LoginHandler implements IMessageHandler {
         String pwd = m.getPwd();
         if(StringUtils.isEmpty(userId) || StringUtils.isEmpty(pwd))
             throw new IllegalArgumentException("error argument");
-        String s1 = "konglingkai";
-        String s2 = "qintiantian";
+        String s1 = "konglingkai";//用户名sugar
+        String s2 = "qintiantian";//密码sugar
         Base64.Decoder decoder = Base64.getDecoder();
         try {
             String t1 = new String(decoder.decode(userId),"utf8");

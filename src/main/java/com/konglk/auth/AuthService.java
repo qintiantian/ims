@@ -13,6 +13,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by konglk on 2018/8/13.
@@ -51,6 +52,7 @@ public class AuthService {
                 return false;
             }
             redisTemplate.opsForHash().put(ImsConstants.IMS_USERS, userId, userVO);
+            redisTemplate.expire(ImsConstants.IMS_USERS, 1L, TimeUnit.DAYS);
         }
         ClientConnection c = ClientConnectionMap.getClientConnection(userId);
         if(c == null || StringUtils.isEmpty(c.getCertificate()))

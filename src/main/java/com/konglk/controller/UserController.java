@@ -3,16 +3,12 @@ package com.konglk.controller;
 import com.konglk.conn.ClientConnection;
 import com.konglk.conn.ClientConnectionMap;
 import com.konglk.data.UserData;
-import com.konglk.mappers.UserDao;
-import com.konglk.service.ConversationService;
-import com.konglk.service.MsgService;
 import com.konglk.service.RelationshipService;
 import com.konglk.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +21,7 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private MsgService msgService;
-    @Autowired
-    private ConversationService conversationService;
+
     @Autowired
     private RelationshipService relationshipService;
 
@@ -45,25 +38,6 @@ public class UserController {
             return userVO;
         }
         return "";
-    }
-
-    @GetMapping("/conversation/{userId}")
-    public Object conversationList(@PathVariable String userId){
-        return conversationService.getConversationByUserId(userId);
-    }
-
-    @GetMapping("/historymessage/{userId}/{destId}/{msgId}/{pageSize}")
-    public Object historyMessage(@PathVariable String userId, @PathVariable String destId, @PathVariable String msgId,
-                                 @PathVariable int pageSize, @RequestParam("direct") int direct){
-        List<Integer> valid = Arrays.asList(1,2,-1,-2);
-        if(valid.contains(direct))
-            return msgService.selectHistoryMessageById(userId, destId, msgId, pageSize, direct);
-        return "";
-    }
-
-    @GetMapping("/historymessage/{userId}/{destId}/images")
-    public Object messageImages(@PathVariable String userId, @PathVariable String destId) {
-        return msgService.selectImagesById(userId, destId);
     }
 
     /**

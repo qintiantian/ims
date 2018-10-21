@@ -27,9 +27,7 @@ public class ConversationService {
     @Autowired
     private ConversationDao conversationDao;
     @Autowired
-    private UnreadCountDao unreadCountDao;
-    @Autowired
-    private RedisTemplate redisTemplate;
+    private MsgService msgService;
 
     public void buildConversation(ConversationVO vo) {
         vo.setTs(System.currentTimeMillis());
@@ -37,11 +35,20 @@ public class ConversationService {
         conversationDao.insertConversation(vo);
     }
 
+    /**
+     * 获取用户的会话列表，包含最后一条消息、时间，以及未读消息条数，会话对方头像、信息
+     * @param userId
+     * @return
+     */
     public List<Map<String,Object>> getConversationByUserId(String userId) {
         List<Map<String,Object>> datas = conversationDao.selectConversationByUserId(userId);
         if(CollectionUtils.isEmpty(datas))
             return Collections.EMPTY_LIST;
         DataProcess.process(datas, new String[]{"lastDate"}, new Function[]{DateFormatter::format});
+        for(Map<String, Object> data : datas) {
+            String destId = (String) data.get("destId");
+            data.put("unreadCount", msgService.getUnreadCount(userId, destId));
+        }
         return datas;
     }
 
@@ -55,4 +62,5 @@ public class ConversationService {
     public ConversationVO getConversation(String sendId, String destId) {
         return conversationDao.selConversation(sendId, destId);
     }
+
 }

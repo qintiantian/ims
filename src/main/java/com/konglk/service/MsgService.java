@@ -1,6 +1,7 @@
 package com.konglk.service;
 
 import com.konglk.common.DataProcess;
+import com.konglk.constants.ImsConstants;
 import com.konglk.entity.ConversationVO;
 import com.konglk.entity.MsgVO;
 import com.konglk.enums.MsgConfig;
@@ -9,6 +10,8 @@ import com.konglk.protobuf.Protocol;
 import com.konglk.utils.DateFormatter;
 import com.konglk.utils.IdBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -26,6 +29,8 @@ import java.util.function.Function;
 public class MsgService {
     @Autowired
     private MsgDao msgDao;
+    @Autowired
+    private RedisTemplate redisTemplate;
     @Autowired
     private ConversationService conversationService;
 
@@ -70,5 +75,30 @@ public class MsgService {
         if(CollectionUtils.isEmpty(images))
             return Collections.emptyList();
         return images;
+    }
+
+    public void notifyReaded(String userId, String destId) {
+        if(userId == null || destId == null)
+            return;
+        redisTemplate.opsForHash().delete(ImsConstants.IMS_UNREAD_COUNT+userId, destId);
+    }
+
+    public void increment(String userId, String destId, long delta) {
+        if(userId == null || destId == null)
+            return;
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        redisTemplate.opsForHash().increment(ImsConstants.IMS_UNREAD_COUNT+userId, destId, delta);
+    }
+
+    public long getUnreadCount(String userId, String destId) {
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        Object c = redisTemplate.opsForHash().get(ImsConstants.IMS_UNREAD_COUNT+userId, destId);
+        if(c==null)
+            return 0L;
+        try {
+            return Long.parseLong(c.toString());
+        } catch (NumberFormatException e) {
+            return 0L;
+        }
     }
 }
