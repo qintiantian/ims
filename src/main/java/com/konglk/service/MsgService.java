@@ -55,8 +55,7 @@ public class MsgService {
     public MsgVO buildMsg(Protocol.CPrivateChat msg) {
         MsgVO msgVO = new MsgVO();
         try {
-            if(msg.getDataType() == Protocol.CPrivateChat.DataType.TXT)
-                msgVO.setContent(new String(msg.getContent().toByteArray(), "utf8"));
+            msgVO.setContent(new String(msg.getContent().toByteArray(), "utf8"));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
