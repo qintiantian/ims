@@ -86,12 +86,10 @@ public class MsgService {
     public void increment(String userId, String destId, long delta) {
         if(userId == null || destId == null)
             return;
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
         redisTemplate.opsForHash().increment(ImsConstants.IMS_UNREAD_COUNT+userId, destId, delta);
     }
 
     public long getUnreadCount(String userId, String destId) {
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
         Object c = redisTemplate.opsForHash().get(ImsConstants.IMS_UNREAD_COUNT+userId, destId);
         if(c==null)
             return 0L;

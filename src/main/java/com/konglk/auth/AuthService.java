@@ -1,5 +1,6 @@
 package com.konglk.auth;
 
+import com.alibaba.fastjson.JSON;
 import com.konglk.conn.ClientConnection;
 import com.konglk.conn.ClientConnectionMap;
 import com.konglk.constants.ImsConstants;
@@ -45,15 +46,6 @@ public class AuthService {
     }
 
     public boolean isValidUser(String userId, String certificate) {
-        Map<String,Object> userVO = (Map<String, Object>) redisTemplate.opsForHash().get(ImsConstants.IMS_USERS, userId);
-        if(userVO == null) {
-            userVO = userService.selecUserById(userId);
-            if(userVO == null) {
-                return false;
-            }
-            redisTemplate.opsForHash().put(ImsConstants.IMS_USERS, userId, userVO);
-            redisTemplate.expire(ImsConstants.IMS_USERS, 1L, TimeUnit.DAYS);
-        }
         ClientConnection c = ClientConnectionMap.getClientConnection(userId);
         if(c == null || StringUtils.isEmpty(c.getCertificate()))
             return false;
