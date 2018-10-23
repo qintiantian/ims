@@ -1,11 +1,13 @@
 package com.konglk.common;
 
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.ibatis.executor.parameter.ParameterHandler;
@@ -21,6 +23,8 @@ import org.apache.ibatis.plugin.Plugin;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 @Component
 @Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
@@ -42,9 +46,9 @@ public class PageInterceptor implements Interceptor {
         if (obj instanceof Page<?>) {
             Page<?> page = (Page<?>) obj;
             //通过反射获取delegate父类BaseStatementHandler的mappedStatement属性
-            MappedStatement mappedStatement = (MappedStatement)ReflectUtil.getFieldValue(delegate, "mappedStatement");
+            MappedStatement mappedStatement = (MappedStatement) ReflectUtil.getFieldValue(delegate, "mappedStatement");
             //拦截到的prepare方法参数是一个Connection对象
-            Connection connection = (Connection)invocation.getArgs()[0];
+            Connection connection = (Connection) invocation.getArgs()[0];
             //获取当前要执行的Sql语句，也就是我们直接在Mapper映射语句中写的Sql语句
             String sql = boundSql.getSql();
             //给当前的page参数对象设置总记录数
@@ -73,7 +77,7 @@ public class PageInterceptor implements Interceptor {
      * 其它的数据库都 没有进行分页
      *
      * @param page 分页对象
-     * @param sql 原sql语句
+     * @param sql  原sql语句
      * @return
      */
     private String getPageSql(Page<?> page, String sql) {
@@ -86,11 +90,32 @@ public class PageInterceptor implements Interceptor {
 
     /**
      * 获取Mysql数据库的分页查询语句
-     * @param page 分页对象
+     *
+     * @param page      分页对象
      * @param sqlBuffer 包含原sql语句的StringBuffer对象
      * @return Mysql数据库分页语句
      */
     private String getMysqlPageSql(Page<?> page, StringBuffer sqlBuffer) {
+        if (!CollectionUtils.isEmpty(page.getParams())) {
+            page.getParams().remove("pageNo");
+            page.getParams().remove("pageSize");
+            StringBuilder sb = new StringBuilder();
+            for (Map.Entry<String, Object> entry : page.getParams().entrySet()) {
+                if (!entry.getKey().equals("sort") && !entry.getKey().equals("direction") && !StringUtils.isEmpty(entry.getValue())) {
+                    String value = entry.getValue().toString();
+                    value = new String(value.getBytes(), StandardCharsets.UTF_8);
+                    sb.append(" " + entry.getKey() + " like '%" + value + "%' and ");
+                }
+            }
+            if (sb.length() > 0) {
+                sb.insert(0, " where ");
+                sb.delete(sb.length() - 4, sb.length());
+                sqlBuffer.append(sb);
+            }
+            if(page.getParams().containsKey("sort") && page.getParams().containsKey("direction")){
+                sqlBuffer.append(" order by "+ page.getParams().get("sort") + " " + page.getParams().get("direction"));
+            }
+        }
         //计算第一条记录的位置，Mysql中记录的位置是从0开始的。
         int offset = (page.getPageNo() - 1) * page.getPageSize();
         sqlBuffer.append(" limit ").append(offset).append(",").append(page.getPageSize());
@@ -100,9 +125,9 @@ public class PageInterceptor implements Interceptor {
     /**
      * 给当前的参数对象page设置总记录数
      *
-     * @param page Mapper映射语句对应的参数对象
+     * @param page            Mapper映射语句对应的参数对象
      * @param mappedStatement Mapper映射语句
-     * @param connection 当前的数据库连接
+     * @param connection      当前的数据库连接
      */
     private void setTotalRecord(Page<?> page,
                                 MappedStatement mappedStatement, Connection connection) {
@@ -112,7 +137,7 @@ public class PageInterceptor implements Interceptor {
         //获取到我们自己写在Mapper映射语句中对应的Sql语句
         String sql = boundSql.getSql();
         //通过查询Sql语句获取到对应的计算总记录数的sql语句
-        String countSql = this.getCountSql(sql);
+        String countSql = this.getCountSql(sql, page.getParams());
         //通过BoundSql获取对应的参数映射
         List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
         //利用Configuration、查询记录数的Sql语句countSql、参数映射关系parameterMappings和参数对象page建立查询记录数对应的BoundSql对象。
@@ -149,22 +174,39 @@ public class PageInterceptor implements Interceptor {
 
     /**
      * 根据原Sql语句获取对应的查询总记录数的Sql语句
+     *
      * @param sql
      * @return
      */
-    private String getCountSql(String sql) {
-
+    private String getCountSql(String sql, Map<String, Object> params) {
+        if (!CollectionUtils.isEmpty(params)) {
+            params.remove("pageNo");
+            params.remove("pageSize");
+            StringBuilder sb = new StringBuilder();
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                if (!entry.getKey().equals("sort") && !entry.getKey().equals("direction") && !StringUtils.isEmpty(entry.getValue())) {
+                    String value = entry.getValue().toString();
+                    value = new String(value.getBytes(), StandardCharsets.UTF_8);
+                    sb.append(" " + entry.getKey() + " like '%" + value + "%' and ");
+                }
+            }
+            if (sb.length() > 0) {
+                sb.insert(0, " where ");
+                sb.delete(sb.length() - 4, sb.length());
+                sql += sb.toString();
+            }
+        }
         return "select count(1) from (" + sql + ") as t";
     }
 
     /**
      * 利用反射进行操作的一个工具类
-     *
      */
     private static class ReflectUtil {
         /**
          * 利用反射获取指定对象的指定属性
-         * @param obj 目标对象
+         *
+         * @param obj       目标对象
          * @param fieldName 目标属性
          * @return 目标属性的值
          */
@@ -188,13 +230,14 @@ public class PageInterceptor implements Interceptor {
 
         /**
          * 利用反射获取指定对象里面的指定属性
-         * @param obj 目标对象
+         *
+         * @param obj       目标对象
          * @param fieldName 目标属性
          * @return 目标字段
          */
         private static Field getField(Object obj, String fieldName) {
             Field field = null;
-            for (Class<?> clazz=obj.getClass(); clazz != Object.class; clazz=clazz.getSuperclass()) {
+            for (Class<?> clazz = obj.getClass(); clazz != Object.class; clazz = clazz.getSuperclass()) {
                 try {
                     field = clazz.getDeclaredField(fieldName);
                     break;
@@ -207,8 +250,9 @@ public class PageInterceptor implements Interceptor {
 
         /**
          * 利用反射设置指定对象的指定属性为指定的值
-         * @param obj 目标对象
-         * @param fieldName 目标属性
+         *
+         * @param obj        目标对象
+         * @param fieldName  目标属性
          * @param fieldValue 目标值
          */
         public static void setFieldValue(Object obj, String fieldName,
