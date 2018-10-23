@@ -1,13 +1,16 @@
 package com.konglk.service;
 
+import com.konglk.common.Page;
 import com.konglk.entity.UserVO;
 import com.konglk.enums.UserConfig;
 import com.konglk.mappers.UserDao;
 import com.konglk.utils.EncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -23,7 +26,7 @@ public class UserService {
         userVO.setSugar(Base64Utils.encodeToString(UUID.randomUUID().toString().getBytes()));
         String pwd = userVO.getPwd();
         String sugar = userVO.getSugar();
-        userVO.setPwd(EncryptUtils.crypt(sugar+pwd));
+        userVO.setPwd(EncryptUtils.crypt(sugar + pwd));
         userVO.setCreatetime(System.currentTimeMillis());
         userVO.setUpdatetime(System.currentTimeMillis());
         userVO.setStatus(UserConfig.UserStatus.NORMAL.v);
@@ -36,14 +39,26 @@ public class UserService {
 
     public void updatePwd(String newpwd, String unique) {
         UserVO userVO = userDao.selectUser(unique);
-        if(userVO != null) {
-            String encrptpwd = EncryptUtils.crypt(userVO.getSugar()+newpwd);
+        if (userVO != null) {
+            String encrptpwd = EncryptUtils.crypt(userVO.getSugar() + newpwd);
             userDao.updatePwd(encrptpwd, unique);
         }
     }
 
-    public Map<String,Object> selecUserById(String userId) {
+    public Map<String, Object> selecUserById(String userId) {
         return userDao.selectUserById(userId);
+    }
+
+    public Page<UserVO> selectPageUsers(Map<String, Object> params, Integer pageNo, Integer pageSize) {
+        Page<UserVO> page = new Page<>();
+        page.setPageNo(pageNo);
+        if (pageSize != null) {
+            page.setPageSize(pageSize);
+        }
+        page.setParams(params);
+        List<UserVO> users = userDao.selectUsersByPage(page);
+        page.setResults(users);
+        return page;
     }
 
 }

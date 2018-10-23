@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.konglk.auth.AuthFilter;
+import com.konglk.common.PageInterceptor;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +20,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 /**
  * Created by konglk on 2018/8/15.
@@ -90,6 +93,12 @@ public class BeanConfig {
         sessionFactoryBean.setDataSource(dataSource);
         org.apache.ibatis.session.Configuration config = new org.apache.ibatis.session.Configuration();
         config.setMapUnderscoreToCamelCase(true);
+
+        PageInterceptor pageInterceptor = new PageInterceptor();
+        Properties properties = new Properties();
+        properties.setProperty("dbType", "mysql");
+        pageInterceptor.setProperties(properties);
+        sessionFactoryBean.setPlugins(new Interceptor[] {new PageInterceptor()});
         sessionFactoryBean.setConfiguration(config);
         // 设置查找器
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();

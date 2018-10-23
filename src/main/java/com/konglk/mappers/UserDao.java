@@ -1,12 +1,15 @@
 package com.konglk.mappers;
 
+import com.konglk.common.Page;
 import com.konglk.entity.UserVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,5 +27,7 @@ public interface UserDao {
     void updatePwd(@Param("newpwd") String newpwd, @Param("unique") String unique);
 
     Map<String, Object> selectUserById(String userId);
+
+    List<UserVO> selectUsersByPage(Page<UserVO> page);
 
 }

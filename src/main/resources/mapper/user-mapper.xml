@@ -13,4 +13,20 @@
         from ims_user where user_id=#{userId} and status = 1
     </select>
 
+    <select id="selectUsersByPage" parameterType="com.konglk.common.Page" resultType="com.konglk.entity.UserVO">
+        select user_id as userId, img_url as imgUrl, country, city, username, nickname, sex, status, cellphone, createtime
+        from ims_user
+        <!--<where>
+            <if test="params.username != null and params.username != ''">
+               and username like '%#{params.username}%'
+            </if>
+            <if test="params.nickname != null and params.nickname != ''">
+               and nickname like '%#{params.nickname}%'
+            </if>
+            <if test="params.cellphone != null and params.cellphone != ''">
+              and cellphone = #{params.cellphone}
+            </if>
+        </where>-->
+        order by createtime desc
+    </select>
 </mapper>

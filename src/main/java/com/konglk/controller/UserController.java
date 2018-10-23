@@ -1,14 +1,20 @@
 package com.konglk.controller;
 
+import com.konglk.common.Page;
 import com.konglk.conn.ClientConnection;
 import com.konglk.conn.ClientConnectionMap;
 import com.konglk.data.UserData;
+import com.konglk.entity.UserVO;
 import com.konglk.service.RelationshipService;
 import com.konglk.service.UserService;
+import org.apache.ibatis.plugin.Intercepts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Null;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +44,12 @@ public class UserController {
             return userVO;
         }
         return "";
+    }
+
+    @GetMapping
+    public Object selectPageUsers(@RequestParam Map<String,Object> params, @RequestParam Integer pageNo, @RequestParam(required = false) Integer pageSize){
+        Page<UserVO> usersPage = userService.selectPageUsers(params, pageNo, pageSize);
+        return usersPage;
     }
 
     /**
